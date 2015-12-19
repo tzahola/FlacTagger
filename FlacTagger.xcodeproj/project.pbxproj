@@ -1,0 +1,621 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		E21AEDEC18BA850100BAD39F /* EditIndividualValuesWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = E21AEDEA18BA850100BAD39F /* EditIndividualValuesWindowController.m */; };
+		E21AEDED18BA850100BAD39F /* EditIndividualValuesWindowController.xib in Resources */ = {isa = PBXBuildFile; fileRef = E21AEDEB18BA850100BAD39F /* EditIndividualValuesWindowController.xib */; };
+		E221862318B010BC00A378CE /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E221862218B010BC00A378CE /* Cocoa.framework */; };
+		E221862D18B010BD00A378CE /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = E221862B18B010BD00A378CE /* InfoPlist.strings */; };
+		E221862F18B010BD00A378CE /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = E221862E18B010BD00A378CE /* main.m */; };
+		E221863318B010BD00A378CE /* Credits.rtf in Resources */ = {isa = PBXBuildFile; fileRef = E221863118B010BD00A378CE /* Credits.rtf */; };
+		E221863618B010BD00A378CE /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = E221863518B010BD00A378CE /* AppDelegate.m */; };
+		E221863B18B010BD00A378CE /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E221863A18B010BD00A378CE /* Images.xcassets */; };
+		E221864218B010BD00A378CE /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E221864118B010BD00A378CE /* XCTest.framework */; };
+		E221864318B010BD00A378CE /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E221862218B010BC00A378CE /* Cocoa.framework */; };
+		E221864B18B010BD00A378CE /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = E221864918B010BD00A378CE /* InfoPlist.strings */; };
+		E221864D18B010BD00A378CE /* FlacTaggerTests.m in Sources */ = {isa = PBXBuildFile; fileRef = E221864C18B010BD00A378CE /* FlacTaggerTests.m */; };
+		E221866118B0F21E00A378CE /* MainWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = E221866018B0F21E00A378CE /* MainWindowController.m */; };
+		E221866318B0F3D000A378CE /* MainWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = E221866218B0F3D000A378CE /* MainWindow.xib */; };
+		E221866618B0FAC900A378CE /* FileWithTags.mm in Sources */ = {isa = PBXBuildFile; fileRef = E221866518B0FAC900A378CE /* FileWithTags.mm */; };
+		E2B448DF18B1131400151E0F /* Controller.m in Sources */ = {isa = PBXBuildFile; fileRef = E2B448DE18B1131400151E0F /* Controller.m */; };
+		E2B448E318B1166200151E0F /* TagEditorWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = E2B448E118B1166200151E0F /* TagEditorWindowController.m */; };
+		E2B448E418B1166200151E0F /* TagEditorWindowController.xib in Resources */ = {isa = PBXBuildFile; fileRef = E2B448E218B1166200151E0F /* TagEditorWindowController.xib */; };
+		E2B448E818B1420E00151E0F /* TagFromDiscogsWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = E2B448E618B1420E00151E0F /* TagFromDiscogsWindowController.m */; };
+		E2B448E918B1420E00151E0F /* TagFromDiscogsWindowController.xib in Resources */ = {isa = PBXBuildFile; fileRef = E2B448E718B1420E00151E0F /* TagFromDiscogsWindowController.xib */; };
+		E2B448EC18B14F9200151E0F /* DiscogsReleaseData.m in Sources */ = {isa = PBXBuildFile; fileRef = E2B448EB18B14F9200151E0F /* DiscogsReleaseData.m */; };
+		E2D6C8AD18CA94670005A7DF /* SynchronizedScrollView.m in Sources */ = {isa = PBXBuildFile; fileRef = E2D6C8AC18CA94670005A7DF /* SynchronizedScrollView.m */; };
+		E2D6C8B118CB24DB0005A7DF /* TrackNumberingWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = E2D6C8AF18CB24DB0005A7DF /* TrackNumberingWindowController.m */; };
+		E2D6C8B218CB24DB0005A7DF /* TrackNumberingWindowController.xib in Resources */ = {isa = PBXBuildFile; fileRef = E2D6C8B018CB24DB0005A7DF /* TrackNumberingWindowController.xib */; };
+		E2D6C8B518CB3D030005A7DF /* TableViewWithActions.m in Sources */ = {isa = PBXBuildFile; fileRef = E2D6C8B418CB3D030005A7DF /* TableViewWithActions.m */; };
+		E2D6C8B918CBC22B0005A7DF /* FileRenamingWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = E2D6C8B718CBC22B0005A7DF /* FileRenamingWindowController.m */; };
+		E2D6C8BA18CBC22B0005A7DF /* FileRenamingWindowController.xib in Resources */ = {isa = PBXBuildFile; fileRef = E2D6C8B818CBC22B0005A7DF /* FileRenamingWindowController.xib */; };
+		E2D6C8BB18CBD6340005A7DF /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = E221863718B010BD00A378CE /* MainMenu.xib */; };
+		E2D6C8BF18CBD8390005A7DF /* libFLAC++.6.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = E221865718B0121A00A378CE /* libFLAC++.6.dylib */; };
+		E2D6C8C218CC97DA0005A7DF /* NSArray+FunctionalProgramming.m in Sources */ = {isa = PBXBuildFile; fileRef = E2D6C8C118CC97DA0005A7DF /* NSArray+FunctionalProgramming.m */; };
+		E2D6C8F318D778500005A7DF /* DirectoryLister.m in Sources */ = {isa = PBXBuildFile; fileRef = E2D6C8F218D778500005A7DF /* DirectoryLister.m */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		E221864418B010BD00A378CE /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = E221861718B010BC00A378CE /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = E221861E18B010BC00A378CE;
+			remoteInfo = FlacTagger;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		E21AEDE918BA850100BAD39F /* EditIndividualValuesWindowController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EditIndividualValuesWindowController.h; sourceTree = "<group>"; };
+		E21AEDEA18BA850100BAD39F /* EditIndividualValuesWindowController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EditIndividualValuesWindowController.m; sourceTree = "<group>"; };
+		E21AEDEB18BA850100BAD39F /* EditIndividualValuesWindowController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = EditIndividualValuesWindowController.xib; sourceTree = "<group>"; };
+		E221861F18B010BC00A378CE /* FlacTagger.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FlacTagger.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		E221862218B010BC00A378CE /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
+		E221862518B010BC00A378CE /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
+		E221862618B010BC00A378CE /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
+		E221862718B010BC00A378CE /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		E221862A18B010BC00A378CE /* FlacTagger-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "FlacTagger-Info.plist"; sourceTree = "<group>"; };
+		E221862C18B010BD00A378CE /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		E221862E18B010BD00A378CE /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		E221863018B010BD00A378CE /* FlacTagger-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "FlacTagger-Prefix.pch"; sourceTree = "<group>"; };
+		E221863218B010BD00A378CE /* en */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; name = en; path = en.lproj/Credits.rtf; sourceTree = "<group>"; };
+		E221863418B010BD00A378CE /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
+		E221863518B010BD00A378CE /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
+		E221863818B010BD00A378CE /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/MainMenu.xib; sourceTree = "<group>"; };
+		E221863A18B010BD00A378CE /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
+		E221864018B010BD00A378CE /* FlacTaggerTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = FlacTaggerTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		E221864118B010BD00A378CE /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
+		E221864818B010BD00A378CE /* FlacTaggerTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "FlacTaggerTests-Info.plist"; sourceTree = "<group>"; };
+		E221864A18B010BD00A378CE /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		E221864C18B010BD00A378CE /* FlacTaggerTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FlacTaggerTests.m; sourceTree = "<group>"; };
+		E221865618B0121A00A378CE /* libFLAC++.6.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libFLAC++.6.dylib"; path = "../../../../../usr/local/lib/libFLAC++.6.dylib"; sourceTree = "<group>"; };
+		E221865718B0121A00A378CE /* libFLAC++.6.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libFLAC++.6.dylib"; path = "../../../../../usr/local/lib/libFLAC++.6.dylib"; sourceTree = "<group>"; };
+		E221865818B0121A00A378CE /* libFLAC++.la */ = {isa = PBXFileReference; lastKnownFileType = text; name = "libFLAC++.la"; path = "../../../../../usr/local/lib/libFLAC++.la"; sourceTree = "<group>"; };
+		E221865F18B0F21E00A378CE /* MainWindowController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MainWindowController.h; sourceTree = "<group>"; };
+		E221866018B0F21E00A378CE /* MainWindowController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MainWindowController.m; sourceTree = "<group>"; };
+		E221866218B0F3D000A378CE /* MainWindow.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MainWindow.xib; sourceTree = "<group>"; };
+		E221866418B0FAC900A378CE /* FileWithTags.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FileWithTags.h; sourceTree = "<group>"; };
+		E221866518B0FAC900A378CE /* FileWithTags.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = FileWithTags.mm; sourceTree = "<group>"; };
+		E2B448DD18B1131400151E0F /* Controller.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Controller.h; sourceTree = "<group>"; };
+		E2B448DE18B1131400151E0F /* Controller.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Controller.m; sourceTree = "<group>"; };
+		E2B448E018B1166200151E0F /* TagEditorWindowController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TagEditorWindowController.h; sourceTree = "<group>"; };
+		E2B448E118B1166200151E0F /* TagEditorWindowController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TagEditorWindowController.m; sourceTree = "<group>"; };
+		E2B448E218B1166200151E0F /* TagEditorWindowController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TagEditorWindowController.xib; sourceTree = "<group>"; };
+		E2B448E518B1420E00151E0F /* TagFromDiscogsWindowController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TagFromDiscogsWindowController.h; sourceTree = "<group>"; };
+		E2B448E618B1420E00151E0F /* TagFromDiscogsWindowController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TagFromDiscogsWindowController.m; sourceTree = "<group>"; };
+		E2B448E718B1420E00151E0F /* TagFromDiscogsWindowController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TagFromDiscogsWindowController.xib; sourceTree = "<group>"; };
+		E2B448EA18B14F9200151E0F /* DiscogsReleaseData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DiscogsReleaseData.h; sourceTree = "<group>"; };
+		E2B448EB18B14F9200151E0F /* DiscogsReleaseData.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DiscogsReleaseData.m; sourceTree = "<group>"; };
+		E2D6C8AB18CA94670005A7DF /* SynchronizedScrollView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SynchronizedScrollView.h; sourceTree = "<group>"; };
+		E2D6C8AC18CA94670005A7DF /* SynchronizedScrollView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SynchronizedScrollView.m; sourceTree = "<group>"; };
+		E2D6C8AE18CB24DB0005A7DF /* TrackNumberingWindowController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TrackNumberingWindowController.h; sourceTree = "<group>"; };
+		E2D6C8AF18CB24DB0005A7DF /* TrackNumberingWindowController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TrackNumberingWindowController.m; sourceTree = "<group>"; };
+		E2D6C8B018CB24DB0005A7DF /* TrackNumberingWindowController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TrackNumberingWindowController.xib; sourceTree = "<group>"; };
+		E2D6C8B318CB3D030005A7DF /* TableViewWithActions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TableViewWithActions.h; sourceTree = "<group>"; };
+		E2D6C8B418CB3D030005A7DF /* TableViewWithActions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TableViewWithActions.m; sourceTree = "<group>"; };
+		E2D6C8B618CBC22B0005A7DF /* FileRenamingWindowController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FileRenamingWindowController.h; sourceTree = "<group>"; };
+		E2D6C8B718CBC22B0005A7DF /* FileRenamingWindowController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FileRenamingWindowController.m; sourceTree = "<group>"; };
+		E2D6C8B818CBC22B0005A7DF /* FileRenamingWindowController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = FileRenamingWindowController.xib; sourceTree = "<group>"; };
+		E2D6C8BC18CBD6510005A7DF /* libFLAC++.6.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; path = "libFLAC++.6.dylib"; sourceTree = "<group>"; };
+		E2D6C8C018CC97DA0005A7DF /* NSArray+FunctionalProgramming.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSArray+FunctionalProgramming.h"; sourceTree = "<group>"; };
+		E2D6C8C118CC97DA0005A7DF /* NSArray+FunctionalProgramming.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSArray+FunctionalProgramming.m"; sourceTree = "<group>"; };
+		E2D6C8F118D778500005A7DF /* DirectoryLister.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DirectoryLister.h; sourceTree = "<group>"; };
+		E2D6C8F218D778500005A7DF /* DirectoryLister.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DirectoryLister.m; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		E221861C18B010BC00A378CE /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E2D6C8BF18CBD8390005A7DF /* libFLAC++.6.dylib in Frameworks */,
+				E221862318B010BC00A378CE /* Cocoa.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		E221863D18B010BD00A378CE /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E221864318B010BD00A378CE /* Cocoa.framework in Frameworks */,
+				E221864218B010BD00A378CE /* XCTest.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		E221861618B010BC00A378CE = {
+			isa = PBXGroup;
+			children = (
+				E221862818B010BC00A378CE /* FlacTagger */,
+				E221864618B010BD00A378CE /* FlacTaggerTests */,
+				E221862118B010BC00A378CE /* Frameworks */,
+				E221862018B010BC00A378CE /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		E221862018B010BC00A378CE /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				E221861F18B010BC00A378CE /* FlacTagger.app */,
+				E221864018B010BD00A378CE /* FlacTaggerTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		E221862118B010BC00A378CE /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				E2D6C8BC18CBD6510005A7DF /* libFLAC++.6.dylib */,
+				E221865618B0121A00A378CE /* libFLAC++.6.dylib */,
+				E221865718B0121A00A378CE /* libFLAC++.6.dylib */,
+				E221865818B0121A00A378CE /* libFLAC++.la */,
+				E221862218B010BC00A378CE /* Cocoa.framework */,
+				E221864118B010BD00A378CE /* XCTest.framework */,
+				E221862418B010BC00A378CE /* Other Frameworks */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		E221862418B010BC00A378CE /* Other Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				E221862518B010BC00A378CE /* AppKit.framework */,
+				E221862618B010BC00A378CE /* CoreData.framework */,
+				E221862718B010BC00A378CE /* Foundation.framework */,
+			);
+			name = "Other Frameworks";
+			sourceTree = "<group>";
+		};
+		E221862818B010BC00A378CE /* FlacTagger */ = {
+			isa = PBXGroup;
+			children = (
+				E2D6C8AA18CA94520005A7DF /* Utilities */,
+				E221863418B010BD00A378CE /* AppDelegate.h */,
+				E221863518B010BD00A378CE /* AppDelegate.m */,
+				E221863718B010BD00A378CE /* MainMenu.xib */,
+				E221863A18B010BD00A378CE /* Images.xcassets */,
+				E2B448DD18B1131400151E0F /* Controller.h */,
+				E2B448DE18B1131400151E0F /* Controller.m */,
+				E2B448EA18B14F9200151E0F /* DiscogsReleaseData.h */,
+				E2B448EB18B14F9200151E0F /* DiscogsReleaseData.m */,
+				E2B448E518B1420E00151E0F /* TagFromDiscogsWindowController.h */,
+				E2B448E618B1420E00151E0F /* TagFromDiscogsWindowController.m */,
+				E2B448E718B1420E00151E0F /* TagFromDiscogsWindowController.xib */,
+				E2B448E018B1166200151E0F /* TagEditorWindowController.h */,
+				E2B448E118B1166200151E0F /* TagEditorWindowController.m */,
+				E2B448E218B1166200151E0F /* TagEditorWindowController.xib */,
+				E21AEDE918BA850100BAD39F /* EditIndividualValuesWindowController.h */,
+				E21AEDEA18BA850100BAD39F /* EditIndividualValuesWindowController.m */,
+				E21AEDEB18BA850100BAD39F /* EditIndividualValuesWindowController.xib */,
+				E2D6C8AE18CB24DB0005A7DF /* TrackNumberingWindowController.h */,
+				E2D6C8AF18CB24DB0005A7DF /* TrackNumberingWindowController.m */,
+				E2D6C8B018CB24DB0005A7DF /* TrackNumberingWindowController.xib */,
+				E2D6C8B618CBC22B0005A7DF /* FileRenamingWindowController.h */,
+				E2D6C8B718CBC22B0005A7DF /* FileRenamingWindowController.m */,
+				E2D6C8B818CBC22B0005A7DF /* FileRenamingWindowController.xib */,
+				E221862918B010BC00A378CE /* Supporting Files */,
+				E221865F18B0F21E00A378CE /* MainWindowController.h */,
+				E221866018B0F21E00A378CE /* MainWindowController.m */,
+				E221866218B0F3D000A378CE /* MainWindow.xib */,
+				E221866418B0FAC900A378CE /* FileWithTags.h */,
+				E221866518B0FAC900A378CE /* FileWithTags.mm */,
+			);
+			path = FlacTagger;
+			sourceTree = "<group>";
+		};
+		E221862918B010BC00A378CE /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				E221862A18B010BC00A378CE /* FlacTagger-Info.plist */,
+				E221862B18B010BD00A378CE /* InfoPlist.strings */,
+				E221862E18B010BD00A378CE /* main.m */,
+				E221863018B010BD00A378CE /* FlacTagger-Prefix.pch */,
+				E221863118B010BD00A378CE /* Credits.rtf */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		E221864618B010BD00A378CE /* FlacTaggerTests */ = {
+			isa = PBXGroup;
+			children = (
+				E221864C18B010BD00A378CE /* FlacTaggerTests.m */,
+				E221864718B010BD00A378CE /* Supporting Files */,
+			);
+			path = FlacTaggerTests;
+			sourceTree = "<group>";
+		};
+		E221864718B010BD00A378CE /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				E221864818B010BD00A378CE /* FlacTaggerTests-Info.plist */,
+				E221864918B010BD00A378CE /* InfoPlist.strings */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		E2D6C8AA18CA94520005A7DF /* Utilities */ = {
+			isa = PBXGroup;
+			children = (
+				E2D6C8AB18CA94670005A7DF /* SynchronizedScrollView.h */,
+				E2D6C8AC18CA94670005A7DF /* SynchronizedScrollView.m */,
+				E2D6C8B318CB3D030005A7DF /* TableViewWithActions.h */,
+				E2D6C8B418CB3D030005A7DF /* TableViewWithActions.m */,
+				E2D6C8C018CC97DA0005A7DF /* NSArray+FunctionalProgramming.h */,
+				E2D6C8C118CC97DA0005A7DF /* NSArray+FunctionalProgramming.m */,
+				E2D6C8F118D778500005A7DF /* DirectoryLister.h */,
+				E2D6C8F218D778500005A7DF /* DirectoryLister.m */,
+			);
+			name = Utilities;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		E221861E18B010BC00A378CE /* FlacTagger */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = E221865018B010BD00A378CE /* Build configuration list for PBXNativeTarget "FlacTagger" */;
+			buildPhases = (
+				E221861B18B010BC00A378CE /* Sources */,
+				E221861C18B010BC00A378CE /* Frameworks */,
+				E221861D18B010BC00A378CE /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = FlacTagger;
+			productName = FlacTagger;
+			productReference = E221861F18B010BC00A378CE /* FlacTagger.app */;
+			productType = "com.apple.product-type.application";
+		};
+		E221863F18B010BD00A378CE /* FlacTaggerTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = E221865318B010BD00A378CE /* Build configuration list for PBXNativeTarget "FlacTaggerTests" */;
+			buildPhases = (
+				E221863C18B010BD00A378CE /* Sources */,
+				E221863D18B010BD00A378CE /* Frameworks */,
+				E221863E18B010BD00A378CE /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				E221864518B010BD00A378CE /* PBXTargetDependency */,
+			);
+			name = FlacTaggerTests;
+			productName = FlacTaggerTests;
+			productReference = E221864018B010BD00A378CE /* FlacTaggerTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		E221861718B010BC00A378CE /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0500;
+				ORGANIZATIONNAME = "Tamás Zahola";
+				TargetAttributes = {
+					E221863F18B010BD00A378CE = {
+						TestTargetID = E221861E18B010BC00A378CE;
+					};
+				};
+			};
+			buildConfigurationList = E221861A18B010BC00A378CE /* Build configuration list for PBXProject "FlacTagger" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = E221861618B010BC00A378CE;
+			productRefGroup = E221862018B010BC00A378CE /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				E221861E18B010BC00A378CE /* FlacTagger */,
+				E221863F18B010BD00A378CE /* FlacTaggerTests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		E221861D18B010BC00A378CE /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E221862D18B010BD00A378CE /* InfoPlist.strings in Resources */,
+				E2B448E418B1166200151E0F /* TagEditorWindowController.xib in Resources */,
+				E2D6C8BA18CBC22B0005A7DF /* FileRenamingWindowController.xib in Resources */,
+				E221866318B0F3D000A378CE /* MainWindow.xib in Resources */,
+				E221863B18B010BD00A378CE /* Images.xcassets in Resources */,
+				E21AEDED18BA850100BAD39F /* EditIndividualValuesWindowController.xib in Resources */,
+				E221863318B010BD00A378CE /* Credits.rtf in Resources */,
+				E2D6C8BB18CBD6340005A7DF /* MainMenu.xib in Resources */,
+				E2B448E918B1420E00151E0F /* TagFromDiscogsWindowController.xib in Resources */,
+				E2D6C8B218CB24DB0005A7DF /* TrackNumberingWindowController.xib in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		E221863E18B010BD00A378CE /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E221864B18B010BD00A378CE /* InfoPlist.strings in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		E221861B18B010BC00A378CE /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E221866618B0FAC900A378CE /* FileWithTags.mm in Sources */,
+				E2B448DF18B1131400151E0F /* Controller.m in Sources */,
+				E21AEDEC18BA850100BAD39F /* EditIndividualValuesWindowController.m in Sources */,
+				E2D6C8C218CC97DA0005A7DF /* NSArray+FunctionalProgramming.m in Sources */,
+				E2D6C8B918CBC22B0005A7DF /* FileRenamingWindowController.m in Sources */,
+				E2D6C8AD18CA94670005A7DF /* SynchronizedScrollView.m in Sources */,
+				E221863618B010BD00A378CE /* AppDelegate.m in Sources */,
+				E2D6C8B118CB24DB0005A7DF /* TrackNumberingWindowController.m in Sources */,
+				E2B448E318B1166200151E0F /* TagEditorWindowController.m in Sources */,
+				E221862F18B010BD00A378CE /* main.m in Sources */,
+				E2B448E818B1420E00151E0F /* TagFromDiscogsWindowController.m in Sources */,
+				E2D6C8B518CB3D030005A7DF /* TableViewWithActions.m in Sources */,
+				E2B448EC18B14F9200151E0F /* DiscogsReleaseData.m in Sources */,
+				E2D6C8F318D778500005A7DF /* DirectoryLister.m in Sources */,
+				E221866118B0F21E00A378CE /* MainWindowController.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		E221863C18B010BD00A378CE /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E221864D18B010BD00A378CE /* FlacTaggerTests.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		E221864518B010BD00A378CE /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = E221861E18B010BC00A378CE /* FlacTagger */;
+			targetProxy = E221864418B010BD00A378CE /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		E221862B18B010BD00A378CE /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				E221862C18B010BD00A378CE /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+		E221863118B010BD00A378CE /* Credits.rtf */ = {
+			isa = PBXVariantGroup;
+			children = (
+				E221863218B010BD00A378CE /* en */,
+			);
+			name = Credits.rtf;
+			sourceTree = "<group>";
+		};
+		E221863718B010BD00A378CE /* MainMenu.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				E221863818B010BD00A378CE /* Base */,
+			);
+			name = MainMenu.xib;
+			sourceTree = "<group>";
+		};
+		E221864918B010BD00A378CE /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				E221864A18B010BD00A378CE /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		E221864E18B010BD00A378CE /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					/usr/local/include,
+				);
+				LIBRARY_SEARCH_PATHS = /usr/local/lib;
+				MACOSX_DEPLOYMENT_TARGET = 10.9;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		E221864F18B010BD00A378CE /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					/usr/local/include,
+				);
+				LIBRARY_SEARCH_PATHS = /usr/local/lib;
+				MACOSX_DEPLOYMENT_TARGET = 10.9;
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+		E221865118B010BD00A378CE /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "FlacTagger/FlacTagger-Prefix.pch";
+				INFOPLIST_FILE = "FlacTagger/FlacTagger-Info.plist";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					/Users/moikboy/Documents/Coding/FlacTagger,
+				);
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Debug;
+		};
+		E221865218B010BD00A378CE /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "FlacTagger/FlacTagger-Prefix.pch";
+				INFOPLIST_FILE = "FlacTagger/FlacTagger-Info.plist";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					/Users/moikboy/Documents/Coding/FlacTagger,
+				);
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Release;
+		};
+		E221865418B010BD00A378CE /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/FlacTagger.app/Contents/MacOS/FlacTagger";
+				COMBINE_HIDPI_IMAGES = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(DEVELOPER_FRAMEWORKS_DIR)",
+					"$(inherited)",
+				);
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "FlacTagger/FlacTagger-Prefix.pch";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				INFOPLIST_FILE = "FlacTaggerTests/FlacTaggerTests-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUNDLE_LOADER)";
+				WRAPPER_EXTENSION = xctest;
+			};
+			name = Debug;
+		};
+		E221865518B010BD00A378CE /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/FlacTagger.app/Contents/MacOS/FlacTagger";
+				COMBINE_HIDPI_IMAGES = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(DEVELOPER_FRAMEWORKS_DIR)",
+					"$(inherited)",
+				);
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "FlacTagger/FlacTagger-Prefix.pch";
+				INFOPLIST_FILE = "FlacTaggerTests/FlacTaggerTests-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUNDLE_LOADER)";
+				WRAPPER_EXTENSION = xctest;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		E221861A18B010BC00A378CE /* Build configuration list for PBXProject "FlacTagger" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				E221864E18B010BD00A378CE /* Debug */,
+				E221864F18B010BD00A378CE /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		E221865018B010BD00A378CE /* Build configuration list for PBXNativeTarget "FlacTagger" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				E221865118B010BD00A378CE /* Debug */,
+				E221865218B010BD00A378CE /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		E221865318B010BD00A378CE /* Build configuration list for PBXNativeTarget "FlacTaggerTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				E221865418B010BD00A378CE /* Debug */,
+				E221865518B010BD00A378CE /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = E221861718B010BC00A378CE /* Project object */;
+}

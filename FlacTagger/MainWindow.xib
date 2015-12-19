@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="4514" systemVersion="13C64" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="4514"/>
+    </dependencies>
+    <objects>
+        <customObject id="-2" userLabel="File's Owner" customClass="MainWindowController">
+            <connections>
+                <outlet property="tableView" destination="14F-WR-pLA" id="VuD-Tu-RFm"/>
+                <outlet property="window" destination="MUV-C0-0YQ" id="O11-aT-z5I"/>
+            </connections>
+        </customObject>
+        <customObject id="-1" userLabel="First Responder" customClass="FirstResponder"/>
+        <customObject id="-3" userLabel="Application"/>
+        <window title="FlacTagger" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" releasedWhenClosed="NO" animationBehavior="default" id="MUV-C0-0YQ">
+            <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES"/>
+            <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
+            <rect key="contentRect" x="335" y="390" width="612" height="417"/>
+            <rect key="screenRect" x="0.0" y="0.0" width="1440" height="900"/>
+            <view key="contentView" id="Yor-Xv-15l">
+                <rect key="frame" x="0.0" y="0.0" width="612" height="417"/>
+                <autoresizingMask key="autoresizingMask"/>
+                <subviews>
+                    <scrollView autohidesScrollers="YES" horizontalLineScroll="19" horizontalPageScroll="10" verticalLineScroll="19" verticalPageScroll="10" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="mS1-fh-weo">
+                        <rect key="frame" x="-1" y="-1" width="614" height="419"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                        <clipView key="contentView" id="gKx-kK-aWv">
+                            <rect key="frame" x="1" y="17" width="612" height="401"/>
+                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                            <subviews>
+                                <tableView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" alternatingRowBackgroundColors="YES" autosaveColumns="NO" headerView="0fh-Fa-Gwr" id="14F-WR-pLA" customClass="TableViewWithActions">
+                                    <rect key="frame" x="0.0" y="0.0" width="612" height="401"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                    <size key="intercellSpacing" width="3" height="2"/>
+                                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                    <color key="gridColor" name="gridColor" catalog="System" colorSpace="catalog"/>
+                                    <connections>
+                                        <outlet property="dataSource" destination="-2" id="djE-1U-Ci8"/>
+                                        <outlet property="delegate" destination="-2" id="yQ3-fM-pSJ"/>
+                                        <outlet property="menu" destination="UUK-s7-yS0" id="QgP-kH-jcC"/>
+                                    </connections>
+                                </tableView>
+                            </subviews>
+                            <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
+                        </clipView>
+                        <scroller key="horizontalScroller" hidden="YES" verticalHuggingPriority="750" horizontal="YES" id="tot-vV-kRq">
+                            <rect key="frame" x="1" y="1" width="0.0" height="16"/>
+                            <autoresizingMask key="autoresizingMask"/>
+                        </scroller>
+                        <scroller key="verticalScroller" hidden="YES" verticalHuggingPriority="750" doubleValue="1" horizontal="NO" id="vNg-ez-ACw">
+                            <rect key="frame" x="-15" y="17" width="16" height="0.0"/>
+                            <autoresizingMask key="autoresizingMask"/>
+                        </scroller>
+                        <tableHeaderView key="headerView" id="0fh-Fa-Gwr">
+                            <rect key="frame" x="0.0" y="0.0" width="612" height="17"/>
+                            <autoresizingMask key="autoresizingMask"/>
+                        </tableHeaderView>
+                    </scrollView>
+                </subviews>
+                <constraints>
+                    <constraint firstAttribute="trailing" secondItem="mS1-fh-weo" secondAttribute="trailing" constant="-1" id="38E-en-mj0"/>
+                    <constraint firstAttribute="bottom" secondItem="mS1-fh-weo" secondAttribute="bottom" constant="-1" id="7i0-Rp-DyN"/>
+                    <constraint firstItem="mS1-fh-weo" firstAttribute="top" secondItem="Yor-Xv-15l" secondAttribute="top" constant="-1" id="RuD-dz-6KE"/>
+                    <constraint firstItem="mS1-fh-weo" firstAttribute="leading" secondItem="Yor-Xv-15l" secondAttribute="leading" constant="-1" id="YpA-Mg-bvg"/>
+                </constraints>
+            </view>
+        </window>
+        <menu id="UUK-s7-yS0">
+            <items>
+                <menuItem title="Edit" id="AUO-JB-dzu">
+                    <modifierMask key="keyEquivalentModifierMask"/>
+                    <connections>
+                        <action selector="editFiles:" target="-2" id="BEY-OU-Eri"/>
+                    </connections>
+                </menuItem>
+                <menuItem title="Number tracks" id="LWr-Ih-wLW">
+                    <modifierMask key="keyEquivalentModifierMask"/>
+                    <connections>
+                        <action selector="numberTracks:" target="-2" id="MuO-oh-nY9"/>
+                    </connections>
+                </menuItem>
+                <menuItem title="Tag from Discogs.com" id="aU0-Kb-pFp">
+                    <modifierMask key="keyEquivalentModifierMask"/>
+                    <connections>
+                        <action selector="tagFromDiscogs:" target="-2" id="eqA-zi-gSr"/>
+                    </connections>
+                </menuItem>
+                <menuItem title="Rename files" id="BxD-D9-164">
+                    <modifierMask key="keyEquivalentModifierMask"/>
+                    <connections>
+                        <action selector="renameFiles:" target="-2" id="m4b-x2-MUU"/>
+                    </connections>
+                </menuItem>
+            </items>
+        </menu>
+    </objects>
+</document>
