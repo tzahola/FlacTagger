@@ -23,4 +23,8 @@
     [self.controller applicationDidFinishedLaunching:self];
 }
 
+- (BOOL)applicationShouldTerminateAfterLastWindowClosed:(NSApplication *)sender {
+    return YES;
+}
+
 @end
