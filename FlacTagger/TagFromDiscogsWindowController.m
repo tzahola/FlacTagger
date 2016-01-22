@@ -7,7 +7,12 @@
 //
 
 #import "TagFromDiscogsWindowController.h"
+
+#import <WebKit/WebKit.h>
+
 #import "SynchronizedScrollView.h"
+
+static NSString* const kIphoneUserAgent = @"Mozilla/5.0 (iPhone; CPU iPhone OS 6_1_4 like Mac OS X) AppleWebKit/536.26 (KHTML, like Gecko) Version/6.0 Mobile/10B350 Safari/8536.25";
 
 @implementation TagFromDiscogsTableViewCell
 @end
@@ -24,7 +29,7 @@
 
 @end
 
-@interface TagFromDiscogsWindowController ()
+@interface TagFromDiscogsWindowController () <WebFrameLoadDelegate>
 
 @property NSColor * missingDataBackgroundColor;
 
@@ -34,7 +39,10 @@
 @property (weak) IBOutlet NSTextField *genreLabel;
 
 @property (strong) IBOutlet NSView *releaseIdView;
-@property (weak) IBOutlet NSTextField *releaseIdTextField;
+@property (weak) IBOutlet NSProgressIndicator *progressIndicator;
+@property (weak) IBOutlet WebView *webView;
+@property (nonatomic, readonly) BOOL isOnReleasePage;
+@property (nonatomic, readonly) NSString* releaseId;
 @property (strong) IBOutlet NSView *discogsDataPairingView;
 @property NSView * emptyView;
 @property (weak) IBOutlet SynchronizedScrollView *filesTableViewScrollView;
@@ -51,6 +59,44 @@
 @end
 
 @implementation TagFromDiscogsWindowController
+@dynamic isOnReleasePage, releaseId;
+
++ (NSRegularExpression*)releaseIdRegexp {
+    static NSRegularExpression* releaseIdRegexp;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        releaseIdRegexp = [NSRegularExpression
+            regularExpressionWithPattern:@"release\\/(\\d+)"
+            options:NSRegularExpressionCaseInsensitive
+            error:nil];
+    });
+    return releaseIdRegexp;
+}
+
+- (BOOL)isOnReleasePage {
+    return self.releaseId != nil;
+}
+
++ (NSSet *)keyPathsForValuesAffectingIsOnReleasePage {
+    return [NSSet setWithObject:@"releaseId"];
+}
+
+- (NSString*)releaseId {
+    if (self.webView.mainFrameURL == nil) return nil;
+    
+    NSTextCheckingResult* match = [[[self class]
+        releaseIdRegexp]
+        firstMatchInString:self.webView.mainFrameURL
+        options:0
+        range:NSMakeRange(0, self.webView.mainFrameURL.length)];
+    if (!match || match.range.location == NSNotFound) return nil;
+    
+    return [self.webView.mainFrameURL substringWithRange:[match rangeAtIndex:1]];
+}
+
++ (NSSet *)keyPathsForValuesAffectingReleaseId {
+    return [NSSet setWithObject:@"webView.mainFrameURL"];
+}
 
 -(void)windowDidLoad{
     [super windowDidLoad];
@@ -63,17 +109,47 @@
     
     [self.filesTableView registerForDraggedTypes:@[ (NSString *)kUTTypeData ]];
     [self.discogsDataTableView registerForDraggedTypes:@[ (NSString *)kUTTypeData ]];
+    
+    self.webView.customUserAgent = kIphoneUserAgent; // force mobile version ;)
+    self.webView.frameLoadDelegate = self;
+}
+
+- (void)webView:(WebView *)sender didStartProvisionalLoadForFrame:(WebFrame *)frame {
+    [self.progressIndicator startAnimation:nil];
+}
+
+- (void)webView:(WebView *)sender didFailProvisionalLoadWithError:(NSError *)error forFrame:(WebFrame *)frame {
+    [self.progressIndicator stopAnimation:nil];
+}
+
+- (void)webView:(WebView *)sender didFailLoadWithError:(NSError *)error forFrame:(WebFrame *)frame {
+    [self.progressIndicator stopAnimation:nil];
+}
+
+- (void)webView:(WebView *)sender didFinishLoadForFrame:(WebFrame *)frame {
+    [self.progressIndicator stopAnimation:nil];
+}
+
+- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSString *,id> *)change context:(void *)context {
+    if (object == self.webView && [keyPath isEqualToString:@"loading"]) {
+        if (self.webView.loading) {
+            [self.progressIndicator startAnimation:self];
+        } else {
+            [self.progressIndicator stopAnimation:self];
+        }
+    }
 }
 
 -(void)startWizard{
     [self.window setContentSize:self.releaseIdView.frame.size];
     self.window.contentView = self.releaseIdView;
+    [self.webView.mainFrame loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:@"http://discogs.com"]]];
 }
 
 - (IBAction)releaseIdOKButtonPressed:(id)sender {
-    if(self.releaseIdTextField.stringValue.length == 0) return;
+    NSAssert(self.isOnReleasePage, @"The webView must have a release's page opened!");
     
-    self.releaseData = [self.dataSource tagFromDiscogsWindowController:self fetchDataForRelease:self.releaseIdTextField.stringValue];
+    self.releaseData = [self.dataSource tagFromDiscogsWindowController:self fetchDataForRelease:self.releaseId];
     if(!self.releaseData) return;
     
     self.files = [self.dataSource tagFromDiscogsWindowControllerFiles:self];
