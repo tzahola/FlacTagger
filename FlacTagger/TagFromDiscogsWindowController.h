@@ -38,7 +38,8 @@
 
 -(void)tagFromDiscogsWindowControllerDidCancel:(TagFromDiscogsWindowController *)controller;
 -(void)tagFromDiscogsWindowController:(TagFromDiscogsWindowController*)controller
-                      finishedWithPairs:(NSArray*)pairings;
+                    finishedWithPairs:(NSArray*)pairings
+                         catalogEntry:(DiscogsReleaseCatalogEntry*)catalogEntry;
 
 @end
 

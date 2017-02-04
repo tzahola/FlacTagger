@@ -87,8 +87,13 @@
         [newFileName replaceOccurrencesOfString:@"%disctotal%" withString:[self emptyIfNil:file.tags[@"DISCTOTAL"]] options:NSLiteralSearch range:NSMakeRange(0, newFileName.length)];
         [newFileName replaceOccurrencesOfString:@"%albumartist%" withString:[self emptyIfNil:file.tags[@"ALBUMARTIST"]] options:NSLiteralSearch range:NSMakeRange(0, newFileName.length)];
         [newFileName replaceOccurrencesOfString:@"/" withString:@"_" options:NSLiteralSearch range:NSMakeRange(0, newFileName.length)];
+        [newFileName replaceOccurrencesOfString:@":" withString:@"_" options:NSLiteralSearch range:NSMakeRange(0, newFileName.length)];
+        [newFileName replaceOccurrencesOfString:@"?" withString:@"_" options:NSLiteralSearch range:NSMakeRange(0, newFileName.length)];
+        [newFileName replaceOccurrencesOfString:@"\\" withString:@"_" options:NSLiteralSearch range:NSMakeRange(0, newFileName.length)];
+        [newFileName replaceOccurrencesOfString:@"|" withString:@"_" options:NSLiteralSearch range:NSMakeRange(0, newFileName.length)];
         [newFileName appendFormat:@".%@",file.filename.pathExtension];
-        [self.renamedFileNames addObject:newFileName];
+        [self.renamedFileNames addObject:[newFileName stringByFoldingWithOptions:NSDiacriticInsensitiveSearch
+                                                                          locale:[NSLocale localeWithLocaleIdentifier:@"en_US"]]];
     }
     
     [self.tableView reloadData];

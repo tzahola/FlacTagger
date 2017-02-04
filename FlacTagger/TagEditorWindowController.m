@@ -90,14 +90,7 @@
     [self.window beginSheet:self.addNewTagPromptWindow completionHandler:nil];
 }
 
-- (void)windowDidLoad
-{
-    [super windowDidLoad];
-    [self.window standardWindowButton:NSWindowCloseButton].target = self;
-    [self.window standardWindowButton:NSWindowCloseButton].action = @selector(closeButtonDidPress);
-}
-
-- (IBAction)saveButtonDidPress:(id)sender {
+- (IBAction)save:(id)sender {
     NSMutableArray * result = [NSMutableArray new];
     for(int i = 0; i < self.files.count; i++){
         __block NSMutableDictionary * tags = [NSMutableDictionary new];
@@ -109,15 +102,11 @@
             }
         }];
         [result addObject:[[TagEditorWindowControllerResult alloc] initWithFile:self.files[i] editedTags:tags]];
-    }
+}
     [self.delegate tagEditorFinishedEditing:self result:result];
 }
 
-- (IBAction)cancelButtonDidPress:(id)sender {
-    [self.delegate tagEditorCancelledEditing:self];
-}
-
--(void)closeButtonDidPress{
+- (IBAction)cancelTagEditing:(id)sender {
     [self.delegate tagEditorCancelledEditing:self];
 }
 

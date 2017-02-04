@@ -49,9 +49,10 @@ static NSString* const kIphoneUserAgent = @"Mozilla/5.0 (iPhone; CPU iPhone OS 6
 @property (weak) IBOutlet NSTableView *filesTableView;
 @property (weak) IBOutlet SynchronizedScrollView *discogsDataTableViewScrollView;
 @property (weak) IBOutlet NSTableView *discogsDataTableView;
+@property (weak) IBOutlet NSPopUpButton *labelCatalogueButton;
 
 @property DiscogsReleaseData * releaseData;
-@property NSArray * files;
+@property NSArray<FileWithTags*> * files;
 
 @property NSMutableArray * trackRowsData;
 @property NSMutableArray * fileRowsData;
@@ -114,6 +115,10 @@ static NSString* const kIphoneUserAgent = @"Mozilla/5.0 (iPhone; CPU iPhone OS 6
     self.webView.frameLoadDelegate = self;
 }
 
+- (void)dealloc {
+    self.webView.frameLoadDelegate = nil;
+}
+
 - (void)webView:(WebView *)sender didStartProvisionalLoadForFrame:(WebFrame *)frame {
     [self.progressIndicator startAnimation:nil];
 }
@@ -143,7 +148,17 @@ static NSString* const kIphoneUserAgent = @"Mozilla/5.0 (iPhone; CPU iPhone OS 6
 -(void)startWizard{
     [self.window setContentSize:self.releaseIdView.frame.size];
     self.window.contentView = self.releaseIdView;
-    [self.webView.mainFrame loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:@"http://discogs.com"]]];
+    
+    self.files = [self.dataSource tagFromDiscogsWindowControllerFiles:self];
+    NSDictionary* tags = self.files[0].tags;
+    NSURL* url;
+    if (tags[@"ARTIST"] != nil && tags[@"ALBUM"] != nil) {
+     url = [NSURL URLWithString:[NSString stringWithFormat:@"https://www.discogs.com/search/?q=%@&type=all", [[NSString stringWithFormat:@"%@ - %@", tags[@"ARTIST"], tags[@"ALBUM"]] stringByAddingPercentEscapesUsingEncoding:NSASCIIStringEncoding]]];
+    } else {
+        url = [NSURL URLWithString:@"https://discogs.com"];
+    }
+    
+    [self.webView.mainFrame loadRequest:[NSURLRequest requestWithURL:url]];
 }
 
 - (IBAction)releaseIdOKButtonPressed:(id)sender {
@@ -151,8 +166,6 @@ static NSString* const kIphoneUserAgent = @"Mozilla/5.0 (iPhone; CPU iPhone OS 6
     
     self.releaseData = [self.dataSource tagFromDiscogsWindowController:self fetchDataForRelease:self.releaseId];
     if(!self.releaseData) return;
-    
-    self.files = [self.dataSource tagFromDiscogsWindowControllerFiles:self];
     
     self.trackRowsData = [NSMutableArray new];
     self.fileRowsData = [NSMutableArray new];
@@ -191,6 +204,14 @@ static NSString* const kIphoneUserAgent = @"Mozilla/5.0 (iPhone; CPU iPhone OS 6
         self.genreLabel.stringValue = @"[ no data ]";
     }
     
+    [self.labelCatalogueButton removeAllItems];
+    [self.labelCatalogueButton addItemWithTitle:@"[ unknown ]"];
+    if(self.releaseData.catalogEntries.count > 0) {
+        for (DiscogsReleaseCatalogEntry* catalogEntry in self.releaseData.catalogEntries) {
+            [self.labelCatalogueButton addItemWithTitle:[NSString stringWithFormat:@"%@ / %@", catalogEntry.label, catalogEntry.catalog]];
+        }
+    }
+    
     self.window.contentView = self.emptyView;
     [self.window setFrame:[self.window frameRectForContentRect:self.discogsDataPairingView.frame] display:YES animate:YES];
     self.window.contentView = self.discogsDataPairingView;
@@ -213,7 +234,11 @@ static NSString* const kIphoneUserAgent = @"Mozilla/5.0 (iPhone; CPU iPhone OS 6
             [pairs addObject:pair];
         }
     }
-    [self.delegate tagFromDiscogsWindowController:self finishedWithPairs:pairs];
+    DiscogsReleaseCatalogEntry* catalogEntry = nil;
+    if(self.labelCatalogueButton.indexOfSelectedItem > 0) {
+        catalogEntry = self.releaseData.catalogEntries[self.labelCatalogueButton.indexOfSelectedItem - 1];
+    }
+    [self.delegate tagFromDiscogsWindowController:self finishedWithPairs:pairs catalogEntry:catalogEntry];
 }
 
 -(NSInteger)numberOfRowsInTableView:(NSTableView *)tableView{
@@ -234,7 +259,7 @@ static NSString* const kIphoneUserAgent = @"Mozilla/5.0 (iPhone; CPU iPhone OS 6
             }else{
                 artistsString = [self.releaseData.albumArtists componentsJoinedByString:@"; "];
             }
-            cell.textField.stringValue = [NSString stringWithFormat:@"%@ - %@", artistsString, track.title];
+            cell.textField.stringValue = [NSString stringWithFormat:@"%@ - %@ - %@", track.position, artistsString, track.title];
         }
     }else if(tableView == self.filesTableView){
         if(self.fileRowsData[row] == [NSNull null]){

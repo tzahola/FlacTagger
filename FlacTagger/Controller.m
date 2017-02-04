@@ -155,7 +155,9 @@
     self.tagFromDiscogsWindowController = nil;
 }
 
--(void)tagFromDiscogsWindowController:(TagFromDiscogsWindowController *)controller finishedWithPairs:(NSArray *)pairings{
+-(void)tagFromDiscogsWindowController:(TagFromDiscogsWindowController *)controller
+                    finishedWithPairs:(NSArray *)pairings
+                         catalogEntry:(DiscogsReleaseCatalogEntry *)catalogEntry{
     BOOL needsAlbumArtist = NO;
     NSString * albumArtist = [self.releaseData.albumArtists componentsJoinedByString:@", "];
     for(DiscogsTaggingPair * pair in pairings){
@@ -195,6 +197,14 @@
             tags[@"GENRE"] = [self.releaseData.genres componentsJoinedByString:@", "];
         }else{
             [tags removeObjectForKey:@"GENRE"];
+        }
+        
+        if(catalogEntry) {
+            tags[@"LABEL"] = catalogEntry.label;
+            tags[@"CATALOG"] = catalogEntry.catalog;
+        } else {
+            [tags removeObjectForKey:@"LABEL"];
+            [tags removeObjectForKey:@"CATALOG"];
         }
         
         NSError * error;

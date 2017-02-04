@@ -74,6 +74,11 @@
     }
 }
 
+- (IBAction)paste:(id)sender {
+    NSArray * filenames = [[NSPasteboard generalPasteboard] propertyListForType:NSFilenamesPboardType];
+    [self.delegate mainWindowController:self didDropFiles:filenames];
+}
+
 -(NSDragOperation)tableView:(NSTableView *)tableView validateDrop:(id<NSDraggingInfo>)info proposedRow:(NSInteger)row proposedDropOperation:(NSTableViewDropOperation)dropOperation{
     if(tableView == self.tableView){
         if(dropOperation == NSTableViewDropAbove){
