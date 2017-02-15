@@ -17,19 +17,82 @@ static NSString* const kIphoneUserAgent = @"Mozilla/5.0 (iPhone; CPU iPhone OS 6
 @implementation TagFromDiscogsTableViewCell
 @end
 
-@implementation DiscogsTaggingPair
+@implementation ChapterData
 
--(instancetype)initWithFile:(FileWithTags *)file discogsData:(DiscogsReleaseTrack *)discogsData{
-    if(self = [super init]){
-        _file = file;
-        _discogsData = discogsData;
+- (instancetype)initWithTitle:(NSString *)title startTime:(NSTimeInterval)startTime {
+    if (self = [super init]) {
+        _title = [title copy];
+        _startTime = startTime;
     }
     return self;
 }
 
 @end
 
-@interface TagFromDiscogsWindowController () <WebFrameLoadDelegate>
+@implementation TrackData
+
+- (instancetype)initWithTitle:(NSString *)title artist:(NSArray<NSString *> *)artists chapters:(NSArray<ChapterData *> *)chapters {
+    if (self = [super init]) {
+        _title = [title copy];
+        _artists = [artists copy];
+        _chapters = [chapters copy];
+    }
+    return self;
+}
+
+@end
+
+@implementation TrackGroupData
+
+- (instancetype)initWithTitle:(NSString *)title tracks:(NSArray<TrackData *> *)tracks {
+    if (self = [super init]) {
+        _title = [title copy];
+        _tracks = [tracks copy];
+    }
+    return self;
+}
+
+@end
+
+@implementation DiscData
+
+- (instancetype)initWithTitle:(NSString *)title trackGroups:(NSArray<TrackGroupData *> *)trackGroups {
+    if (self = [super init]) {
+        _title = [title copy];
+        _trackGroups = [trackGroups copy];
+    }
+    return self;
+}
+
+@end
+
+@implementation AlbumData
+
+- (instancetype)initWithAlbumArtists:(NSArray<NSString *> *)albumArtists discs:(NSArray<DiscData *> *)discs genres:(NSArray<NSString *> *)genres styles:(NSArray<NSString *> *)styles {
+    if (self = [super init]) {
+        _albumArtists = [albumArtists copy];
+        _discs = [discs copy];
+        _genres = [genres copy];
+        _styles = [styles copy];
+    }
+    return self;
+}
+
+@end
+
+@implementation DiscogsTaggingPair
+
+- (instancetype)initWithFiles:(NSArray<FileWithTags *> *)files data:(AlbumData *)data {
+    if (self = [super init]) {
+        _files = [files copy];
+        _data = data;
+    }
+    return self;
+}
+
+@end
+
+@implementation TagFromDiscogsWindowController () <WebFrameLoadDelegate>
 
 @property NSColor * missingDataBackgroundColor;
 
