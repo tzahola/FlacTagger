@@ -14,7 +14,27 @@
 
 static NSString* const kIphoneUserAgent = @"Mozilla/5.0 (iPhone; CPU iPhone OS 6_1_4 like Mac OS X) AppleWebKit/536.26 (KHTML, like Gecko) Version/6.0 Mobile/10B350 Safari/8536.25";
 
-@implementation TagFromDiscogsTableViewCell
+@interface HeadingTrackTableCellView : NSTableCellView
+@property (weak) IBOutlet NSPopUpButton *rolePopUpButton;
+@end
+
+@implementation HeadingTrackTableCellView
+@end
+
+@class IndexTrackTableCellView;
+@protocol IndexTrackTableCellViewDelegate <NSObject>
+- (void)indexTrackTableCellViewSplit:(IndexTrackTableCellView*)view;
+@end
+
+@interface IndexTrackTableCellView : NSTableCellView
+@property (weak) IBOutlet NSTextField *subtitleLabel;
+@property (weak) IBOutlet id<IndexTrackTableCellViewDelegate> delegate;
+@end
+
+@implementation IndexTrackTableCellView
+- (IBAction)splitButtonPressed:(id)sender {
+    [self.delegate indexTrackTableCellViewSplit:self];
+}
 @end
 
 @implementation ChapterData
@@ -68,12 +88,19 @@ static NSString* const kIphoneUserAgent = @"Mozilla/5.0 (iPhone; CPU iPhone OS 6
 
 @implementation AlbumData
 
-- (instancetype)initWithAlbumArtists:(NSArray<NSString *> *)albumArtists discs:(NSArray<DiscData *> *)discs genres:(NSArray<NSString *> *)genres styles:(NSArray<NSString *> *)styles {
+- (instancetype)initWithAlbumArtists:(NSArray<NSString *> *)albumArtists
+                               discs:(NSArray<DiscData *> *)discs
+                              genres:(NSArray<NSString *> *)genres
+                              styles:(NSArray<NSString *> *)styles
+                               label:(NSString * _Nullable)label
+                             catalog:(NSString * _Nullable)catalog {
     if (self = [super init]) {
         _albumArtists = [albumArtists copy];
         _discs = [discs copy];
         _genres = [genres copy];
         _styles = [styles copy];
+        _label = [label copy];
+        _catalog = [catalog copy];
     }
     return self;
 }
@@ -92,7 +119,7 @@ static NSString* const kIphoneUserAgent = @"Mozilla/5.0 (iPhone; CPU iPhone OS 6
 
 @end
 
-@implementation TagFromDiscogsWindowController () <WebFrameLoadDelegate>
+@interface TagFromDiscogsWindowController () <WebFrameLoadDelegate,IndexTrackTableCellViewDelegate>
 
 @property NSColor * missingDataBackgroundColor;
 
@@ -108,19 +135,23 @@ static NSString* const kIphoneUserAgent = @"Mozilla/5.0 (iPhone; CPU iPhone OS 6
 @property (nonatomic, readonly) NSString* releaseId;
 @property (strong) IBOutlet NSView *discogsDataPairingView;
 @property NSView * emptyView;
-@property (weak) IBOutlet SynchronizedScrollView *filesTableViewScrollView;
+
 @property (weak) IBOutlet NSTableView *filesTableView;
-@property (weak) IBOutlet SynchronizedScrollView *discogsDataTableViewScrollView;
 @property (weak) IBOutlet NSTableView *discogsDataTableView;
 @property (weak) IBOutlet NSPopUpButton *labelCatalogueButton;
 
 @property DiscogsReleaseData * releaseData;
 @property NSArray<FileWithTags*> * files;
 
-@property NSMutableArray * trackRowsData;
-@property NSMutableArray * fileRowsData;
+@property NSMapTable* headingRoles;
+@property NSMutableArray* fileRowsData;
 
 @end
+
+typedef NS_ENUM(NSInteger, HeadingRole) {
+    HeadingRoleDiscTitle = 0,
+    HeadingRoleGroupTitle = 1
+};
 
 @implementation TagFromDiscogsWindowController
 @dynamic isOnReleasePage, releaseId;
@@ -168,8 +199,6 @@ static NSString* const kIphoneUserAgent = @"Mozilla/5.0 (iPhone; CPU iPhone OS 6
     self.missingDataBackgroundColor = [NSColor colorWithRed:1 green:0.7 blue:0.7 alpha:1];
     
     self.emptyView = [[NSView alloc] initWithFrame:NSZeroRect];
-    [self.filesTableViewScrollView setSynchronizedScrollView:self.discogsDataTableViewScrollView];
-    [self.discogsDataTableViewScrollView setSynchronizedScrollView:self.filesTableViewScrollView];
     
     [self.filesTableView registerForDraggedTypes:@[ (NSString *)kUTTypeData ]];
     [self.discogsDataTableView registerForDraggedTypes:@[ (NSString *)kUTTypeData ]];
@@ -230,22 +259,13 @@ static NSString* const kIphoneUserAgent = @"Mozilla/5.0 (iPhone; CPU iPhone OS 6
     self.releaseData = [self.dataSource tagFromDiscogsWindowController:self fetchDataForRelease:self.releaseId];
     if(!self.releaseData) return;
     
-    self.trackRowsData = [NSMutableArray new];
+    self.headingRoles = [NSMapTable
+        mapTableWithKeyOptions:NSPointerFunctionsObjectPointerPersonality | NSPointerFunctionsStrongMemory
+        valueOptions:NSPointerFunctionsObjectPersonality | NSPointerFunctionsStrongMemory];
+    
     self.fileRowsData = [NSMutableArray new];
-    NSInteger rowCount = MAX(self.releaseData.tracks.count, self.files.count);
-    for(int i = 0; i < rowCount; i++){
-        if(i < self.releaseData.tracks.count){
-            [self.trackRowsData addObject:self.releaseData.tracks[i]];
-        }else{
-            [self.trackRowsData addObject:[NSNull null]];
-        }
-        
-        if(i < self.files.count){
-            [self.fileRowsData addObject:self.files[i]];
-        }else{
-            [self.fileRowsData addObject:[NSNull null]];
-        }
-    }
+    [self.fileRowsData addObjectsFromArray:self.files];
+    [self refillFiles];
     
     if(self.releaseData.albumArtists.count > 0){
         self.albumArtistLabel.stringValue = [self.releaseData.albumArtists componentsJoinedByString:@", "];
@@ -289,68 +309,137 @@ static NSString* const kIphoneUserAgent = @"Mozilla/5.0 (iPhone; CPU iPhone OS 6
 }
 
 - (IBAction)discogsDataPairingOKButtonPressed:(id)sender {
-    NSMutableArray * pairs = [NSMutableArray new];
-    NSAssert(self.trackRowsData.count == self.fileRowsData.count, @"File rows count and track rows count must be equal!");
-    for(int i = 0; i < self.trackRowsData.count; i++){
-        if(self.trackRowsData[i] != [NSNull null] && self.fileRowsData[i] != [NSNull null]){
-            DiscogsTaggingPair * pair = [[DiscogsTaggingPair alloc] initWithFile:self.fileRowsData[i] discogsData:self.trackRowsData[i]];
-            [pairs addObject:pair];
-        }
-    }
     DiscogsReleaseCatalogEntry* catalogEntry = nil;
     if(self.labelCatalogueButton.indexOfSelectedItem > 0) {
         catalogEntry = self.releaseData.catalogEntries[self.labelCatalogueButton.indexOfSelectedItem - 1];
     }
-    [self.delegate tagFromDiscogsWindowController:self finishedWithPairs:pairs catalogEntry:catalogEntry];
+    // TODO
+    [self.delegate tagFromDiscogsWindowController:self finishedWithPairing:nil];
+}
+
+- (void)reloadData {
+    [self.discogsDataTableView reloadData];
+    [self.filesTableView reloadData];
 }
 
 -(NSInteger)numberOfRowsInTableView:(NSTableView *)tableView{
-    return MAX(self.releaseData.tracks.count, self.files.count);
+    return MAX(self.releaseData.tracks.count, self.fileRowsData.count);
 }
 
 -(NSView *)tableView:(NSTableView *)tableView viewForTableColumn:(NSTableColumn *)tableColumn row:(NSInteger)row{
-    TagFromDiscogsTableViewCell * cell = [tableView makeViewWithIdentifier:tableColumn.identifier owner:self];
-    
     if(tableView == self.discogsDataTableView){
-        if(self.trackRowsData[row] == [NSNull null]){
+        if(row >= self.releaseData.tracks.count){
+            NSTableCellView* cell = [NSTableCellView new];
             cell.textField.stringValue = @"[ no data ]";
-        }else{
-            DiscogsReleaseTrack * track = self.trackRowsData[row];
-            NSString * artistsString;
-            if(track.artists.count > 0){
-                artistsString = [track.artists componentsJoinedByString:@"; "];
-            }else{
-                artistsString = [self.releaseData.albumArtists componentsJoinedByString:@"; "];
+            return cell;
+        } else {
+            DiscogsReleaseTrack * track = self.releaseData.tracks[row];
+            if (track.isHeading) {
+                HeadingTrackTableCellView* cell = [tableView makeViewWithIdentifier:@"Heading" owner:self];
+                cell.textField.stringValue = track.title;
+                HeadingRole role = [([self.headingRoles objectForKey:track] ?: @(HeadingRoleDiscTitle)) integerValue];
+                [cell.rolePopUpButton selectItemAtIndex:role];
+                return cell;
+            } else {
+                NSMutableArray<NSString*>* components = [NSMutableArray new];
+                if (track.position.length > 0) {
+                    [components addObject:track.position];
+                }
+                if (track.artists.count > 0) {
+                    [components addObject:[NSString stringWithFormat:@" - %@", [track.artists componentsJoinedByString:@"; "]]];
+                }
+                [components addObject:track.title];
+                NSString* titleString = [components componentsJoinedByString:@" - "];
+                if (track.subtracks.count == 0) {
+                    NSTableCellView* cell = [tableView makeViewWithIdentifier:@"Track" owner:self];
+                    cell.textField.stringValue = titleString;
+                    return cell;
+                } else {
+                    IndexTrackTableCellView* cell = [tableView makeViewWithIdentifier:@"Index" owner:self];
+                    cell.delegate = self;
+                    cell.textField.stringValue = titleString;
+                    cell.subtitleLabel.stringValue = [NSString stringWithFormat:@"%d subtracks",
+                                                      (int)track.subtracks.count];
+                    return cell;
+                }
             }
-            cell.textField.stringValue = [NSString stringWithFormat:@"%@ - %@ - %@", track.position, artistsString, track.title];
         }
-    }else if(tableView == self.filesTableView){
+    } else if (tableView == self.filesTableView) {
+        NSTableCellView* cell = [tableView makeViewWithIdentifier:tableColumn.identifier owner:self];
         if(self.fileRowsData[row] == [NSNull null]){
             cell.textField.stringValue = @"[ no file ]";
         }else{
-            FileWithTags * file = self.fileRowsData[row];
-            cell.textField.stringValue = [[file.filename pathComponents] lastObject];
+            FileWithTags* file = self.fileRowsData[row];
+            cell.textField.stringValue = file.filename.pathComponents.lastObject;
         }
+        return cell;
     }else{
         NSAssert(NO, @"Invalid tableView: '%@", tableView);
         return nil;
     }
-    
-    return cell;
 }
 
--(void)tableView:(NSTableView *)tableView didAddRowView:(NSTableRowView *)rowView forRow:(NSInteger)row{
-    if((tableView == self.discogsDataTableView && self.trackRowsData[row] == [NSNull null]) ||
-       (tableView == self.filesTableView && self.fileRowsData[row] == [NSNull null])){
-        rowView.backgroundColor = self.missingDataBackgroundColor;
+- (void)indexTrackTableCellViewSplit:(IndexTrackTableCellView*)view {
+    NSInteger row = [self.discogsDataTableView rowForView:view];
+    DiscogsReleaseTrack* track = self.releaseData.tracks[row];
+    NSMutableArray* splittedTracks = [NSMutableArray new];
+    [splittedTracks addObject:[[DiscogsReleaseTrack alloc] initHeadingWithTitle:track.title]];
+    for (DiscogsReleaseSubtrack* subtrack in track.subtracks) {
+        [splittedTracks addObject:[[DiscogsReleaseTrack alloc] initWithPosition:subtrack.position
+                                                                       duration:subtrack.duration
+                                                                          title:subtrack.title
+                                                                        artists:subtrack.artists
+                                                                      subtracks:nil]];
     }
+    
+    NSMutableArray* tracks = [self.releaseData.tracks mutableCopy];
+    NSIndexSet* indexes = [NSIndexSet indexSetWithIndexesInRange:NSMakeRange([tracks indexOfObject:track], splittedTracks.count)];
+    [tracks removeObject:track];
+    [tracks insertObjects:splittedTracks atIndexes:indexes];
+    self.releaseData.tracks = tracks;
+    [self refillFiles];
+    
+    [self reloadData];
+}
+
+- (void)refillFiles {
+    NSMutableArray* fileRowsData = [NSMutableArray new];
+    NSEnumerator* trackEnumerator = self.releaseData.tracks.objectEnumerator;
+    NSEnumerator* fileEnumerator = self.fileRowsData.objectEnumerator;
+    
+    {
+        DiscogsReleaseTrack* track;
+        id fileData = fileEnumerator.nextObject;
+        while ((track = trackEnumerator.nextObject) != nil && fileData != nil) {
+            if (fileData != [NSNull null] && track.isHeading) {
+                [fileRowsData addObject:[NSNull null]];
+            } else {
+                [fileRowsData addObject:fileData];
+                fileData = fileEnumerator.nextObject;
+            }
+        }
+        while (fileData != nil) {
+            [fileRowsData addObject:fileData];
+            fileData = fileEnumerator.nextObject;
+        }
+    }
+    
+    while (fileRowsData.count < self.releaseData.tracks.count) {
+        [fileRowsData addObject:[NSNull null]];
+    }
+    
+    self.fileRowsData = fileRowsData;
 }
 
 -(NSDragOperation)tableView:(NSTableView *)tableView validateDrop:(id<NSDraggingInfo>)info proposedRow:(NSInteger)row proposedDropOperation:(NSTableViewDropOperation)dropOperation{
-    if(dropOperation == NSTableViewDropAbove && tableView == [info draggingSource]){
-        return NSDragOperationMove;
-    }else{
+    if (tableView == self.discogsDataTableView) {
         return NSDragOperationNone;
+    } else {
+        if(dropOperation == NSTableViewDropAbove && tableView == info.draggingSource){
+            return NSDragOperationMove;
+        } else {
+            return NSDragOperationNone;
+        }
     }
 }
 
@@ -367,23 +456,15 @@ static NSString* const kIphoneUserAgent = @"Mozilla/5.0 (iPhone; CPU iPhone OS 6
 }
 
 -(BOOL)tableView:(NSTableView *)tableView acceptDrop:(id<NSDraggingInfo>)info row:(NSInteger)row dropOperation:(NSTableViewDropOperation)dropOperation{
+    NSAssert(tableView == self.filesTableView, @"Invalid table!");
     
     NSIndexSet * indexSet = [NSKeyedUnarchiver unarchiveObjectWithData:[[info draggingPasteboard] dataForType:(NSString *)kUTTypeData]];
     NSInteger indexesLessThanTargetIndex = [indexSet countOfIndexesInRange:NSMakeRange(0, row)];
     
-    NSMutableArray * rowData;
-    if(tableView == self.filesTableView){
-        rowData = self.fileRowsData;
-    }else if(tableView == self.discogsDataTableView){
-        rowData = self.trackRowsData;
-    }else{
-        NSAssert(NO, @"Invalid tableView: '%@'", tableView);
-    }
-    
-    NSArray * objects = [rowData objectsAtIndexes:indexSet];
-    [rowData removeObjectsAtIndexes:indexSet];
+    NSArray * objects = [self.fileRowsData objectsAtIndexes:indexSet];
+    [self.fileRowsData removeObjectsAtIndexes:indexSet];
     NSIndexSet * newIndexSet = [NSIndexSet indexSetWithIndexesInRange:NSMakeRange(row - indexesLessThanTargetIndex, indexSet.count)];
-    [rowData insertObjects:objects atIndexes:newIndexSet];
+    [self.fileRowsData insertObjects:objects atIndexes:newIndexSet];
     [tableView selectRowIndexes:newIndexSet byExtendingSelection:NO];
     [tableView reloadData];
     

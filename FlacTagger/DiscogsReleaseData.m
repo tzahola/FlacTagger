@@ -20,13 +20,45 @@
 
 @end
 
-@implementation DiscogsReleaseTrack
+@implementation DiscogsReleaseSubtrack
 
--(instancetype)initWithPosition:(NSString *)position title:(NSString *)title artists:(NSArray *)artists {
-    if(self = [super init]){
+- (instancetype)initWithPosition:(NSString *)position
+                        duration:(NSTimeInterval)duration
+                           title:(NSString *)title
+                         artists:(NSArray<NSString *> *)artists {
+    if (self = [super init]) {
         _position = [position copy];
+        _duration = duration;
         _title = [title copy];
         _artists = [artists copy];
+    }
+    return self;
+}
+
+@end
+
+@implementation DiscogsReleaseTrack
+
+- (instancetype)initWithPosition:(NSString*)position
+                       duration:(NSTimeInterval)duration
+                          title:(NSString*)title
+                        artists:(NSArray<NSString*>*)artists
+                       subtracks:(NSArray<DiscogsReleaseSubtrack *> *)subtracks {
+    if (self = [super init]) {
+        _isHeading = NO;
+        _position = [position copy];
+        _duration = duration;
+        _title = [title copy];
+        _artists = [artists copy];
+        _subtracks = [subtracks copy];
+    }
+    return self;
+}
+
+- (instancetype)initHeadingWithTitle:(NSString *)title {
+    if (self = [super init]) {
+        _isHeading = YES;
+        _title = [title copy];
     }
     return self;
 }
@@ -36,15 +68,17 @@
 @implementation DiscogsReleaseData
 
 -(instancetype)initWithAlbumArtists:(NSArray *)albumArtists
-                             genres:(NSArray *)genres
+                             genres:(NSArray<NSString *> *)genres
+                             styles:(NSArray<NSString *> *)styles
                               album:(NSString *)album
-                             tracks:(NSArray *)tracks
+                             tracks:(NSArray<DiscogsReleaseTrack *> *)tracks
                         releaseDate:(NSString *)releaseDate
-                     catalogEntries:(NSArray *)catalogEntries {
+                     catalogEntries:(NSArray<DiscogsReleaseCatalogEntry *> *)catalogEntries {
     if(self = [super init]){
-        _album = [album copy];
         _albumArtists = [albumArtists copy];
         _genres = [genres copy];
+        _styles = [styles copy];
+        _album = [album copy];
         _tracks = [tracks copy];
         _releaseDate = [releaseDate copy];
         _catalogEntries = [catalogEntries copy];
@@ -56,6 +90,14 @@
 
 @implementation DiscogsReleaseDataLoader
 
+- (NSTimeInterval)parseDuration:(NSString*)durationString {
+    NSMutableArray<NSString*>* components = [[durationString componentsSeparatedByString:@":"].reverseObjectEnumerator.allObjects mutableCopy];
+    while (components.count < 3) {
+        [components addObject:@"0"];
+    }
+    return components[0].doubleValue + 60 * (components[1].doubleValue + 60 * components[2].doubleValue);
+}
+
 -(DiscogsReleaseData *)loadDataForReleaseId:(NSString *)releaseId error:(NSError *__autoreleasing *)error{
     NSURL * releaseURL = [NSURL URLWithString:[@"http://api.discogs.com/releases/" stringByAppendingString:releaseId]];
     
@@ -64,75 +106,75 @@
     NSDictionary * discogsDictionary = [NSJSONSerialization JSONObjectWithData:discogsData options:NSJSONReadingAllowFragments error:error];
     
     NSMutableArray * discogsTracks = [NSMutableArray new];
-    NSArray* discogsTracklist = [((NSArray<NSDictionary*>*)discogsDictionary[@"tracklist"])
-         sortedArrayUsingComparator:^NSComparisonResult(NSDictionary*  _Nonnull obj1, NSDictionary*  _Nonnull obj2) {
-            return [obj1[@"position"] compare:obj2[@"position"] options:NSNumericSearch];
-        }];
-    for(NSDictionary * track in discogsTracklist){
+    for(NSDictionary * track in discogsDictionary[@"tracklist"]){
         NSString* type = track[@"type_"];
-        if ([type isEqualToString:@"track"]) {
+        if ([type isEqualToString:@"track"] || [type isEqualToString:@"index"]) {
             NSString * title = track[@"title"];
             NSMutableArray * artists = [NSMutableArray new];
             for(NSDictionary * artist in track[@"artists"]){
                 [artists addObject:artist[@"name"]];
             }
             NSString* position = track[@"position"];
-            [discogsTracks addObject:[[DiscogsReleaseTrack alloc] initWithPosition:position title:title artists:artists]];
-        } else if ([type isEqualToString:@"index"]) {
-            NSMutableArray* positions = [NSMutableArray new];
-            NSMutableArray* artists = [NSMutableArray new];
+            NSTimeInterval duration = [self parseDuration:track[@"duration"]];
             
-            if ([track[@"position"] length] > 0) {
-                [positions addObject:track[@"position"]];
-            }
-            for(NSDictionary * artist in track[@"artists"]){
-                [artists addObject:artist[@"name"]];
-            }
-            
-            NSMutableArray* subtitles = [NSMutableArray new];
-            for (NSDictionary* subtrack in track[@"sub_tracks"]) {
-                if ([subtrack[@"position"] length] > 0) {
-                    [positions addObject:subtrack[@"position"]];
-                }
-                for(NSDictionary * artist in subtrack[@"artists"]){
-                    [artists addObject:artist[@"name"]];
-                }
-                if ([subtrack[@"title"] length] > 0) {
-                    [subtitles addObject:subtrack[@"title"]];
+            NSMutableArray<DiscogsReleaseSubtrack*>* subtracks = nil;
+            if (track[@"sub_tracks"]) {
+                subtracks = [NSMutableArray new];
+                for (NSDictionary* subtrack in track[@"sub_tracks"]) {
+                    NSString* position = subtrack[@"position"];
+                    NSMutableArray<NSString*>* artists = subtrack[@"artists"] ? [NSMutableArray new] : nil;
+                    for(NSDictionary * artist in subtrack[@"artists"]){
+                        [artists addObject:artist[@"name"]];
+                    }
+                    NSString* title = subtrack[@"title"];
+                    NSTimeInterval duration = [self parseDuration:subtrack[@"duration"]];
+                    [subtracks addObject:[[DiscogsReleaseSubtrack alloc] initWithPosition:position
+                                                                                 duration:duration
+                                                                                    title:title
+                                                                                  artists:artists]];
                 }
             }
-            
-            NSString* substitlesJoined = [subtitles componentsJoinedByString:@", "];
-            NSString* title = [track[@"title"] length] > 0 ?
-                [NSString stringWithFormat:@"%@ (%@)", track[@"title"], substitlesJoined] :
-                substitlesJoined;
-            
-            [discogsTracks addObject:[[DiscogsReleaseTrack alloc] initWithPosition:[positions componentsJoinedByString:@", "]
+            [discogsTracks addObject:[[DiscogsReleaseTrack alloc] initWithPosition:position
+                                                                          duration:duration
                                                                              title:title
-                                                                           artists:artists]];
+                                                                           artists:artists
+                                                                         subtracks:subtracks]];
+        } else if ([type isEqualToString:@"heading"]) {
+            [discogsTracks addObject:[[DiscogsReleaseTrack alloc] initHeadingWithTitle:track[@"title"]]];
         }
     }
     
-    NSMutableArray * albumArtists = [NSMutableArray new];
+    NSMutableArray * albumArtists = discogsDictionary[@"artists"] ? [NSMutableArray new] : nil;
     for(NSDictionary * albumArtist in discogsDictionary[@"artists"]){
         [albumArtists addObject:albumArtist[@"name"]];
     }
     
-    NSMutableArray * genres = [NSMutableArray new];
+    NSMutableArray * genres = discogsDictionary[@"genres"] ? [NSMutableArray new] : nil;
     for(NSString * genre in discogsDictionary[@"genres"]){
         [genres addObject:genre];
+    }
+    
+    NSMutableArray * styles = discogsDictionary[@"styles"] ? [NSMutableArray new] : nil;
+    for(NSString * style in discogsDictionary[@"styles"]){
+        [styles addObject:style];
     }
     
     NSString * releaseDate = discogsDictionary[@"released"];
     NSString * album = discogsDictionary[@"title"];
     
-    NSMutableArray* catalogEntries = [NSMutableArray new];
+    NSMutableArray* catalogEntries = discogsDictionary[@"labels"] ? [NSMutableArray new] : nil;
     for (NSDictionary* catalogEntry in discogsDictionary[@"labels"]) {
         [catalogEntries addObject:[[DiscogsReleaseCatalogEntry alloc] initWithLabel:catalogEntry[@"name"]
                                                                             catalog:catalogEntry[@"catno"]]];
     }
     
-    return [[DiscogsReleaseData alloc] initWithAlbumArtists:albumArtists genres:genres album:album tracks:discogsTracks releaseDate:releaseDate catalogEntries:catalogEntries];
+    return [[DiscogsReleaseData alloc] initWithAlbumArtists:albumArtists
+                                                     genres:genres
+                                                     styles:styles
+                                                      album:album
+                                                     tracks:discogsTracks
+                                                releaseDate:releaseDate
+                                             catalogEntries:catalogEntries];
 }
 
 @end

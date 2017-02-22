@@ -8,12 +8,8 @@
 
 #import <Cocoa/Cocoa.h>
 
-@interface SynchronizedScrollView : NSScrollView {
-    NSScrollView* synchronizedScrollView; // not retained
-}
+@interface SynchronizedScrollView : NSScrollView
 
-- (void)setSynchronizedScrollView:(NSScrollView*)scrollview;
-- (void)stopSynchronizing;
-- (void)synchronizedViewContentBoundsDidChange:(NSNotification *)notification;
+@property(nonatomic, weak) IBOutlet NSScrollView* synchronizedScrollView;
 
 @end

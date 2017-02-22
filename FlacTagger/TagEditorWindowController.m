@@ -70,7 +70,7 @@
 }
 
 -(void)individualTagValueEditorFinished:(EditIndividualValuesWindowController *)controller withResult:(NSArray *)result{
-    NSMutableArray * editedValues = [self.tagsWithValues[self.individuallyEditedTagName] mutableCopy];
+    NSMutableArray* editedValues = [self.tagsWithValues[self.individuallyEditedTagName] mutableCopy];
     for(int i = 0; i < result.count; i++){
         FileWithIndividualTagValue * file = result[i];
         NSUInteger index = [self.files indexOfObject:file.file];

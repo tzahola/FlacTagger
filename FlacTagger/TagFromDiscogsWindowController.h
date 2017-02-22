@@ -57,15 +57,16 @@
 @property (nonatomic, nonnull, readonly) NSArray<DiscData*>* discs;
 @property (nonatomic, nonnull, readonly) NSArray<NSString*>* genres;
 @property (nonatomic, nullable, readonly) NSArray<NSString*>* styles;
+@property (nonatomic, nullable, readonly) NSString* label;
+@property (nonatomic, nullable, readonly) NSString* catalog;
 
 - (instancetype __nonnull)initWithAlbumArtists:(NSArray<NSString*>* __nonnull)albumArtists
                                          discs:(NSArray<DiscData*>* __nonnull)discs
                                         genres:(NSArray<NSString*>* __nonnull)genres
-                                        styles:(NSArray<NSString*>* __nullable)styles;
+                                        styles:(NSArray<NSString*>* __nullable)styles
+                                         label:(NSString* __nullable)label
+                                       catalog:(NSString* __nullable)catalog;
 
-@end
-
-@interface TagFromDiscogsTableViewCell : NSTableCellView
 @end
 
 @interface DiscogsTaggingPair : NSObject
@@ -82,19 +83,17 @@
 
 @protocol TagFromDiscogsWindowControllerDataSource <NSObject>
 
--(DiscogsReleaseData *)tagFromDiscogsWindowController:(TagFromDiscogsWindowController*)controller
-                                  fetchDataForRelease:(NSString*)releaseID;
-
--(NSArray *)tagFromDiscogsWindowControllerFiles:(TagFromDiscogsWindowController*)controller;
+- (DiscogsReleaseData* __nullable)tagFromDiscogsWindowController:(TagFromDiscogsWindowController* __nonnull)controller
+                                  fetchDataForRelease:(NSString* __nonnull)releaseID;
+- (NSArray<FileWithTags*>* __nonnull)tagFromDiscogsWindowControllerFiles:(TagFromDiscogsWindowController* __nonnull)controller;
 
 @end
 
 @protocol TagFromDiscogsWindowControllerDelegate <NSObject>
 
--(void)tagFromDiscogsWindowControllerDidCancel:(TagFromDiscogsWindowController *)controller;
--(void)tagFromDiscogsWindowController:(TagFromDiscogsWindowController*)controller
-                    finishedWithPairs:(NSArray*)pairings
-                         catalogEntry:(DiscogsReleaseCatalogEntry*)catalogEntry;
+- (void)tagFromDiscogsWindowControllerDidCancel:(TagFromDiscogsWindowController* __nonnull)controller;
+- (void)tagFromDiscogsWindowController:(TagFromDiscogsWindowController* __nonnull)controller
+                   finishedWithPairing:(DiscogsTaggingPair* __nonnull)pair;
 
 @end
 

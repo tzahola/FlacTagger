@@ -155,64 +155,62 @@
     self.tagFromDiscogsWindowController = nil;
 }
 
--(void)tagFromDiscogsWindowController:(TagFromDiscogsWindowController *)controller
-                    finishedWithPairs:(NSArray *)pairings
-                         catalogEntry:(DiscogsReleaseCatalogEntry *)catalogEntry{
-    BOOL needsAlbumArtist = NO;
-    NSString * albumArtist = [self.releaseData.albumArtists componentsJoinedByString:@", "];
-    for(DiscogsTaggingPair * pair in pairings){
-        if(pair.discogsData.artists.count > 0){
-            NSString * trackArtist = [pair.discogsData.artists componentsJoinedByString:@", "];
-            if(![trackArtist isEqualToString:albumArtist]){
-                needsAlbumArtist = YES;
-                break;
-            }
-        }
-    }
-    
-    for(DiscogsTaggingPair * pair in pairings){
-        NSMutableDictionary * tags = [pair.file.tags mutableCopy];
-        tags[@"TITLE"] = pair.discogsData.title;
-        tags[@"ALBUM"] = self.releaseData.album;
-        NSString * artist;
-        if(pair.discogsData.artists.count > 0){
-            artist = [pair.discogsData.artists componentsJoinedByString:@", "];
-        }else{
-            artist = [self.releaseData.albumArtists componentsJoinedByString:@", "];
-        }
-        tags[@"ARTIST"] = artist;
-        if(needsAlbumArtist){
-            tags[@"ALBUMARTIST"] = [self.releaseData.albumArtists componentsJoinedByString:@", "];
-        }else{
-            [tags removeObjectForKey:@"ALBUMARTIST"];
-        }
-        
-        if(self.releaseData.releaseDate){
-            tags[@"DATE"] = self.releaseData.releaseDate;
-        }else{
-            [tags removeObjectForKey:@"DATE"];
-        }
-        
-        if(self.releaseData.genres){
-            tags[@"GENRE"] = [self.releaseData.genres componentsJoinedByString:@", "];
-        }else{
-            [tags removeObjectForKey:@"GENRE"];
-        }
-        
-        if(catalogEntry) {
-            tags[@"LABEL"] = catalogEntry.label;
-            tags[@"CATALOG"] = catalogEntry.catalog;
-        } else {
-            [tags removeObjectForKey:@"LABEL"];
-            [tags removeObjectForKey:@"CATALOG"];
-        }
-        
-        NSError * error;
-        BOOL didWrite = [pair.file writeTags:tags error:&error];
-        if(!didWrite){
-            [[NSAlert alertWithError:error] runModal];
-        }
-    }
+-(void)tagFromDiscogsWindowController:(TagFromDiscogsWindowController *)controller finishedWithPairing:(DiscogsTaggingPair *)pair {
+//    BOOL needsAlbumArtist = NO;
+//    NSString * albumArtist = [self.releaseData.albumArtists componentsJoinedByString:@", "];
+//    for(DiscogsTaggingPair * pair in pairings){
+//        if(pair.discogsData.artists.count > 0){
+//            NSString * trackArtist = [pair.discogsData.artists componentsJoinedByString:@", "];
+//            if(![trackArtist isEqualToString:albumArtist]){
+//                needsAlbumArtist = YES;
+//                break;
+//            }
+//        }
+//    }
+//    
+//    for(DiscogsTaggingPair * pair in pairings){
+//        NSMutableDictionary * tags = [pair.file.tags mutableCopy];
+//        tags[@"TITLE"] = pair.discogsData.title;
+//        tags[@"ALBUM"] = self.releaseData.album;
+//        NSString * artist;
+//        if(pair.discogsData.artists.count > 0){
+//            artist = [pair.discogsData.artists componentsJoinedByString:@", "];
+//        }else{
+//            artist = [self.releaseData.albumArtists componentsJoinedByString:@", "];
+//        }
+//        tags[@"ARTIST"] = artist;
+//        if(needsAlbumArtist){
+//            tags[@"ALBUMARTIST"] = [self.releaseData.albumArtists componentsJoinedByString:@", "];
+//        }else{
+//            [tags removeObjectForKey:@"ALBUMARTIST"];
+//        }
+//        
+//        if(self.releaseData.releaseDate){
+//            tags[@"DATE"] = self.releaseData.releaseDate;
+//        }else{
+//            [tags removeObjectForKey:@"DATE"];
+//        }
+//        
+//        if(self.releaseData.genres){
+//            tags[@"GENRE"] = [self.releaseData.genres componentsJoinedByString:@", "];
+//        }else{
+//            [tags removeObjectForKey:@"GENRE"];
+//        }
+//        
+//        if(catalogEntry) {
+//            tags[@"LABEL"] = catalogEntry.label;
+//            tags[@"CATALOG"] = catalogEntry.catalog;
+//        } else {
+//            [tags removeObjectForKey:@"LABEL"];
+//            [tags removeObjectForKey:@"CATALOG"];
+//        }
+//        
+//        NSError * error;
+//        BOOL didWrite = [pair.file writeTags:tags error:&error];
+//        if(!didWrite){
+//            [[NSAlert alertWithError:error] runModal];
+//        }
+//    }
     
     [self.mainWindowController.window endSheet:self.tagFromDiscogsWindowController.window];
     [self.mainWindowController refresh];
