@@ -75,6 +75,10 @@
         }
     }
     
+    [files sortUsingComparator:^NSComparisonResult(NSString*  _Nonnull file1, NSString*  _Nonnull file2) {
+        return [file1 compare:file2];
+    }];
+    
     for(NSString * filename in files){
         NSError * error;
         FileWithTags * fileWithTags = [[FileWithTags alloc] initWithFilename:filename error:&error];

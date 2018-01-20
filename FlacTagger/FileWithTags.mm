@@ -89,6 +89,10 @@ NSString * FileWithTagsErrorDomain = @"FileWithTagsErrorDomain";
     
     for(int i = 0; i < vorbisComments.get_num_comments(); i++){
         FLAC::Metadata::VorbisComment::Entry entry = vorbisComments.get_comment(i);
+        if (!entry.is_valid()) {
+            NSLog(@"Invalid vorbis comment in %@", self.filename);
+            continue;
+        }
         NSString * tagName = [[NSString stringWithCString:entry.get_field_name() encoding:NSUTF8StringEncoding] uppercaseString];
         NSString * tagValue = [NSString stringWithCString:entry.get_field_value() encoding:NSUTF8StringEncoding];
         
