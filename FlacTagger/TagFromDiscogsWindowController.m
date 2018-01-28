@@ -153,7 +153,10 @@ static NSString* const kIphoneUserAgent = @"Mozilla/5.0 (iPhone; CPU iPhone OS 6
     NSDictionary* tags = self.files[0].tags;
     NSURL* url;
     if (tags[@"ARTIST"] != nil && tags[@"ALBUM"] != nil) {
-     url = [NSURL URLWithString:[NSString stringWithFormat:@"https://www.discogs.com/search/?q=%@&type=all", [[NSString stringWithFormat:@"%@ - %@", tags[@"ARTIST"], tags[@"ALBUM"]] stringByAddingPercentEscapesUsingEncoding:NSASCIIStringEncoding]]];
+        NSURLComponents* urlComponents = [NSURLComponents componentsWithString:@"https://www.discogs.com/search/"];
+        urlComponents.queryItems = @[ [NSURLQueryItem queryItemWithName:@"q" value:[NSString stringWithFormat:@"%@ - %@", tags[@"ARTIST"], tags[@"ALBUM"]]],
+                                      [NSURLQueryItem queryItemWithName:@"type" value:@"master"] ];
+        url = urlComponents.URL;
     } else {
         url = [NSURL URLWithString:@"https://discogs.com"];
     }
