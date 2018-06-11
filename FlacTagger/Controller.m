@@ -76,7 +76,7 @@
     }
     
     [files sortUsingComparator:^NSComparisonResult(NSString*  _Nonnull file1, NSString*  _Nonnull file2) {
-        return [file1 compare:file2];
+        return [file1 localizedStandardCompare:file2];
     }];
     
     for(NSString * filename in files){
