@@ -87,6 +87,8 @@
     [self.tableView addTableColumn:titleColumn];
     [self.tableView addTableColumn:albumColumn];
     [self.tableView addTableColumn:genreColumn];
+
+    [self.window makeFirstResponder:self.tableView];
 }
 
 -(NSInteger)numberOfRowsInTableView:(NSTableView *)tableView{
