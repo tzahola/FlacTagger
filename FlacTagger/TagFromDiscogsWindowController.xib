@@ -27,11 +27,11 @@
         <customObject id="-1" userLabel="First Responder" customClass="FirstResponder"/>
         <customObject id="-3" userLabel="Application" customClass="NSObject"/>
         <customView id="bR0-uo-rVZ">
-            <rect key="frame" x="0.0" y="0.0" width="800" height="600"/>
+            <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
             <subviews>
                 <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="NdM-rE-5If">
-                    <rect key="frame" x="646" y="13" width="73" height="32"/>
+                    <rect key="frame" x="446" y="13" width="73" height="32"/>
                     <constraints>
                         <constraint firstAttribute="width" constant="61" id="kAD-pu-YDg"/>
                     </constraints>
@@ -47,7 +47,7 @@ Gw
                     </connections>
                 </button>
                 <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="4l2-W4-C63">
-                    <rect key="frame" x="719" y="13" width="67" height="32"/>
+                    <rect key="frame" x="519" y="13" width="67" height="32"/>
                     <constraints>
                         <constraint firstAttribute="width" constant="55" id="huR-HM-Rhs"/>
                     </constraints>
@@ -64,7 +64,7 @@ DQ
                     </connections>
                 </button>
                 <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="GoF-gW-crK">
-                    <rect key="frame" x="12" y="24" width="596" height="14"/>
+                    <rect key="frame" x="12" y="24" width="396" height="14"/>
                     <textFieldCell key="cell" sendsActionOnEndEditing="YES" title="Navigate to the release from which you want to import data" id="C0p-nE-KFL">
                         <font key="font" metaFont="smallSystem"/>
                         <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
@@ -72,10 +72,10 @@ DQ
                     </textFieldCell>
                 </textField>
                 <progressIndicator wantsLayer="YES" horizontalHuggingPriority="750" verticalHuggingPriority="750" maxValue="100" displayedWhenStopped="NO" bezeled="NO" indeterminate="YES" controlSize="small" style="spinning" translatesAutoresizingMaskIntoConstraints="NO" id="Osg-E1-Rkr">
-                    <rect key="frame" x="621" y="23" width="16" height="16"/>
+                    <rect key="frame" x="421" y="23" width="16" height="16"/>
                 </progressIndicator>
                 <wkWebView wantsLayer="YES" allowsBackForwardNavigationGestures="YES" allowsMagnification="YES" translatesAutoresizingMaskIntoConstraints="NO" id="MRh-ix-TFd">
-                    <rect key="frame" x="0.0" y="47" width="800" height="553"/>
+                    <rect key="frame" x="0.0" y="47" width="600" height="553"/>
                     <wkWebViewConfiguration key="configuration">
                         <audiovisualMediaTypes key="mediaTypesRequiringUserActionForPlayback" none="YES"/>
                         <wkPreferences key="preferences"/>

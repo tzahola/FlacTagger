@@ -59,7 +59,6 @@ NSString * FileWithTagsErrorDomain = @"FileWithTagsErrorDomain";
         
         FLAC::Metadata::VorbisComment::Entry entry(tag.UTF8String, value.UTF8String);
         bool didAppend = vorbisComment->append_comment(entry);
-        
         NSAssert(didAppend, @"Failed to add tag: '%@' -> '%@'", tag, value);
     }];
     
