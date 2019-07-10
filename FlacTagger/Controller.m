@@ -9,26 +9,36 @@
 #import "Controller.h"
 #import "DirectoryLister.h"
 
-@interface Controller ()
+@interface Controller () <
+MainWindowControllerDataSource,
+MainWindowControllerDelegate,
+TagEditorWindowControllerDelegate,
+TagFromDiscogsWindowControllerDelegate,
+TagEditorWindowControllerDataSource,
+TagFromDiscogsWindowControllerDataSource,
+TrackNumberingWindowControllerDelegate,
+TrackNumberingWindowControllerDataSource,
+FileRenamingWindowControllerDelegate,
+FileRenamingWindowControllerDataSource>
 
-@property MainWindowController * mainWindowController;
-@property TagEditorWindowController * tagEditorWindowController;
-@property TagFromDiscogsWindowController * tagFromDiscogsWindowController;
-@property TrackNumberingWindowController * trackNumberingWindowController;
-@property FileRenamingWindowController * fileRenamingWindowController;
+@property (nonatomic) MainWindowController * mainWindowController;
+@property (nonatomic) TagEditorWindowController * tagEditorWindowController;
+@property (nonatomic) TagFromDiscogsWindowController * tagFromDiscogsWindowController;
+@property (nonatomic) TrackNumberingWindowController * trackNumberingWindowController;
+@property (nonatomic) FileRenamingWindowController * fileRenamingWindowController;
 
-@property NSMutableArray * files;
-@property NSArray * editedFiles;
+@property (nonatomic) NSMutableArray * files;
+@property (nonatomic) NSArray * editedFiles;
 
-@property DiscogsReleaseDataLoader * releaseDataLoader;
-@property DiscogsReleaseData * releaseData;
+@property (nonatomic) DiscogsReleaseDataLoader * releaseDataLoader;
+@property (nonatomic) DiscogsReleaseData * releaseData;
 
 @end
 
 @implementation Controller
 
 -(id)init{
-    if(self = [super init]){
+    if (self = [super init]) {
         self.files = [NSMutableArray new];
     }
     return self;
@@ -44,33 +54,31 @@
     [self.mainWindowController showWindow:self];
 }
 
--(void)mainWindowController:(MainWindowController *)controller didDropFiles:(NSArray *)filenames{
-    
-    [self addFiles:filenames];
+-(void)mainWindowController:(MainWindowController *)controller didDropFileURLs:(NSArray<NSURL *> *)fileURLs {
+    [self addFileURLs:fileURLs];
     [self.mainWindowController refresh];
 }
 
--(void)addFiles:(NSArray *)filenames{
-    
+-(void)addFileURLs:(NSArray *)fileURLs {
     NSMutableArray * files = [NSMutableArray new];
     
-    for(NSString * path in filenames){
+    for (NSURL* url in fileURLs) {
         BOOL isDirectory;
-        BOOL exists = [[NSFileManager defaultManager] fileExistsAtPath:path isDirectory:&isDirectory];
-        if(exists){
-            if(isDirectory){
+        BOOL exists = [[NSFileManager defaultManager] fileExistsAtPath:url.path isDirectory:&isDirectory];
+        if (exists) {
+            if (isDirectory) {
                 NSError * error;
-                NSArray * flacPaths = [DirectoryLister listFilesRecursivelyFrom:path withFilter:^BOOL(NSString *fileName) {
+                NSArray * flacPaths = [DirectoryLister listFilesRecursivelyFrom:url.path withFilter:^BOOL(NSString *fileName) {
                     return [fileName.pathExtension.lowercaseString isEqualToString:@"flac"];
                 } error:&error];
                 
-                if(flacPaths){
+                if (flacPaths) {
                     [files addObjectsFromArray:flacPaths];
-                }else{
+                } else {
                     [[NSAlert alertWithError:error] runModal];
                 }
-            }else if([path.pathExtension.lowercaseString isEqualToString:@"flac"]){
-                [files addObject:path.stringByStandardizingPath];
+            } else if ([url.pathExtension.lowercaseString isEqualToString:@"flac"]) {
+                [files addObject:url.path.stringByStandardizingPath];
             }
         }
     }
@@ -79,12 +87,12 @@
         return [file1 localizedStandardCompare:file2];
     }];
     
-    for(NSString * filename in files){
+    for (NSString * filename in files) {
         NSError * error;
         FileWithTags * fileWithTags = [[FileWithTags alloc] initWithFilename:filename error:&error];
-        if(fileWithTags){
+        if (fileWithTags) {
             [self.files addObject:fileWithTags];
-        }else{
+        } else {
             [[NSAlert alertWithError:error] runModal];
         }
     }
@@ -105,10 +113,10 @@
 }
 
 -(void)tagEditorFinishedEditing:(TagEditorWindowController *)controller result:(NSArray *)result{
-    for(TagEditorWindowControllerResult * resultItem in result){
+    for (TagEditorWindowControllerResult * resultItem in result) {
         NSError * error;
         BOOL didWrite = [resultItem.file writeTags:resultItem.editedTags error:&error];
-        if(!didWrite){
+        if (!didWrite) {
             [[NSAlert alertWithError:error] runModal];
         }
     }
@@ -146,9 +154,9 @@
 -(DiscogsReleaseData *)tagFromDiscogsWindowController:(TagFromDiscogsWindowController *)controller fetchDataForRelease:(NSString *)releaseID{
     NSError *error;
     self.releaseData = [self.releaseDataLoader loadDataForReleaseId:releaseID error:&error];
-    if(self.releaseData){
+    if (self.releaseData) {
         return self.releaseData;
-    }else{
+    } else {
         [[NSAlert alertWithError:error] runModal];
         return nil;
     }
@@ -164,46 +172,46 @@
                          catalogEntry:(DiscogsReleaseCatalogEntry *)catalogEntry{
     BOOL needsAlbumArtist = NO;
     NSString * albumArtist = [self.releaseData.albumArtists componentsJoinedByString:@", "];
-    for(DiscogsTaggingPair * pair in pairings){
-        if(pair.discogsData.artists.count > 0){
+    for (DiscogsTaggingPair * pair in pairings) {
+        if (pair.discogsData.artists.count > 0) {
             NSString * trackArtist = [pair.discogsData.artists componentsJoinedByString:@", "];
-            if(![trackArtist isEqualToString:albumArtist]){
+            if (![trackArtist isEqualToString:albumArtist]) {
                 needsAlbumArtist = YES;
                 break;
             }
         }
     }
     
-    for(DiscogsTaggingPair * pair in pairings){
+    for (DiscogsTaggingPair * pair in pairings) {
         NSMutableDictionary * tags = [pair.file.tags mutableCopy];
         tags[@"TITLE"] = pair.discogsData.title;
         tags[@"ALBUM"] = self.releaseData.album;
         NSString * artist;
-        if(pair.discogsData.artists.count > 0){
+        if (pair.discogsData.artists.count > 0) {
             artist = [pair.discogsData.artists componentsJoinedByString:@", "];
-        }else{
+        } else {
             artist = [self.releaseData.albumArtists componentsJoinedByString:@", "];
         }
         tags[@"ARTIST"] = artist;
-        if(needsAlbumArtist){
+        if (needsAlbumArtist) {
             tags[@"ALBUMARTIST"] = [self.releaseData.albumArtists componentsJoinedByString:@", "];
-        }else{
+        } else {
             [tags removeObjectForKey:@"ALBUMARTIST"];
         }
         
-        if(self.releaseData.releaseDate){
+        if (self.releaseData.releaseDate) {
             tags[@"DATE"] = self.releaseData.releaseDate;
-        }else{
+        } else {
             [tags removeObjectForKey:@"DATE"];
         }
         
-        if(self.releaseData.genres){
+        if (self.releaseData.genres) {
             tags[@"GENRE"] = [self.releaseData.genres componentsJoinedByString:@", "];
-        }else{
+        } else {
             [tags removeObjectForKey:@"GENRE"];
         }
         
-        if(catalogEntry) {
+        if (catalogEntry) {
             tags[@"LABEL"] = catalogEntry.label;
             tags[@"CATALOG"] = catalogEntry.catalog;
         } else {
@@ -213,7 +221,7 @@
         
         NSError * error;
         BOOL didWrite = [pair.file writeTags:tags error:&error];
-        if(!didWrite){
+        if (!didWrite) {
             [[NSAlert alertWithError:error] runModal];
         }
     }
@@ -235,7 +243,7 @@
 
 -(void)trackNumberingWindowController:(TrackNumberingWindowController *)controller
                   finishedWithResults:(NSArray *)trackNumberingResults{
-    for(TrackNumberingResult * result in trackNumberingResults){
+    for (TrackNumberingResult * result in trackNumberingResults) {
         NSMutableDictionary * tags = [result.file.tags mutableCopy];
         tags[@"TRACKNUMBER"] = [NSString stringWithFormat:@"%d", (int)result.trackNumber];
         tags[@"TRACKTOTAL"] = [NSString stringWithFormat:@"%d", (int)result.trackTotal];
@@ -243,7 +251,7 @@
         tags[@"DISCTOTAL"] = [NSString stringWithFormat:@"%d", (int)result.discTotal];
         NSError * error;
         BOOL didWrite = [result.file writeTags:tags error:&error];
-        if(!didWrite){
+        if (!didWrite) {
             [[NSAlert alertWithError:error] runModal];
         }
     }
@@ -275,10 +283,10 @@
 }
 
 -(void)fileRenamingWindowController:(FileRenamingWindowController *)controller renameFiles:(NSArray *)renamings{
-    for(FileRenaming * renaming in renamings){
+    for (FileRenaming * renaming in renamings) {
         NSError * error;
         BOOL didRename = [renaming.file renameTo:renaming.newFileName error:&error];
-        if(!didRename){
+        if (!didRename) {
             [[NSAlert alertWithError:error] runModal];
         }
     }

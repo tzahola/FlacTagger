@@ -15,7 +15,7 @@
                 trackNumber:(NSInteger)trackNumber
                   discTotal:(NSInteger)discTotal
                  trackTotal:(NSInteger)trackTotal{
-    if(self = [super init]){
+    if (self = [super init]) {
         _file = file;
         _discNumber = discNumber;
         _trackNumber = trackNumber;
@@ -69,22 +69,22 @@
     NSMutableArray * discLengthNumbers = [NSMutableArray new];
     
     NSInteger sum = 0;
-    for(NSString * stringLength in discLengths){
+    for (NSString * stringLength in discLengths) {
         NSInteger integerLength = [stringLength integerValue];
-        if(integerLength > 0){
+        if (integerLength > 0) {
             sum += integerLength;
             [discLengthNumbers addObject:@(integerLength)];
         }
     }
     
-    if(sum == self.files.count){
+    if (sum == self.files.count) {
         self.discTotal = discLengthNumbers.count;
         self.trackNumbers = [NSMutableArray new];
         self.trackTotals = [NSMutableArray new];
         self.discNumbers = [NSMutableArray new];
         
-        for(int j = 0; j < discLengthNumbers.count; j++){
-            for(int i = 0; i < [discLengthNumbers[j] integerValue]; i++){
+        for (int j = 0; j < discLengthNumbers.count; j++) {
+            for (int i = 0; i < [discLengthNumbers[j] integerValue]; i++) {
                 [self.trackTotals addObject:discLengthNumbers[j]];
                 [self.trackNumbers addObject:@(i+1)];
                 [self.discNumbers addObject:@(j+1)];
@@ -96,7 +96,7 @@
 
 - (IBAction)okButtonDidPress:(id)sender {
     NSMutableArray * results = [NSMutableArray new];
-    for(int i = 0; i < self.files.count; i++){
+    for (int i = 0; i < self.files.count; i++) {
         TrackNumberingResult * result = [[TrackNumberingResult alloc] initWithFile:self.files[i]
                                                                         discNumber:[self.discNumbers[i] integerValue]
                                                                        trackNumber:[self.trackNumbers[i] integerValue]
@@ -119,15 +119,15 @@
     
     FileWithTags * file = self.files[row];
     
-    if([tableColumn.identifier isEqualToString:@"DISCNUMBER"]){
+    if ([tableColumn.identifier isEqualToString:@"DISCNUMBER"]) {
         return [NSString stringWithFormat:@"%@ / %d", self.discNumbers[row], (int)self.discTotal];
-    }else if([tableColumn.identifier isEqualToString:@"TRACKNUMBER"]){
+    } else if ([tableColumn.identifier isEqualToString:@"TRACKNUMBER"]) {
         return [NSString stringWithFormat:@"%@ / %@", self.trackNumbers[row], self.trackTotals[row]];
-    }else if([tableColumn.identifier isEqualToString:@"ARTIST"]){
+    } else if ([tableColumn.identifier isEqualToString:@"ARTIST"]) {
         return file.tags[@"ARTIST"];
-    }else if([tableColumn.identifier isEqualToString:@"TITLE"]){
+    } else if ([tableColumn.identifier isEqualToString:@"TITLE"]) {
         return file.tags[@"TITLE"];
-    }else{
+    } else {
         NSAssert(NO, @"Invalid column: '%@'", tableColumn);
         return nil;
     }

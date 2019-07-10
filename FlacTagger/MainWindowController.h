@@ -20,7 +20,7 @@
 
 @protocol MainWindowControllerDelegate <NSObject>
 
--(void)mainWindowController:(MainWindowController *)controller didDropFiles:(NSArray *)filenames;
+-(void)mainWindowController:(MainWindowController *)controller didDropFileURLs:(NSArray<NSURL*>*)fileURLs;
 
 -(void)mainWindowController:(MainWindowController *)controller deleteFiles:(NSArray *)files;
 -(void)mainWindowController:(MainWindowController *)controller editFiles:(NSArray*)files;
@@ -32,8 +32,8 @@
 
 @interface MainWindowController : NSWindowController<NSTableViewDataSource, TableViewWithActionsDelegate>
 
-@property(weak) id<MainWindowControllerDelegate> delegate;
-@property(weak) id<MainWindowControllerDataSource> dataSource;
+@property (weak) id<MainWindowControllerDelegate> delegate;
+@property (weak) id<MainWindowControllerDataSource> dataSource;
 
 -(void)refresh;
 

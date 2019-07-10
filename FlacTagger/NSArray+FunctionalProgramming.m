@@ -12,9 +12,9 @@
 
 -(instancetype)mapMaybe:(NSArrayMapBlock)mapBlock{
     NSMutableArray * result = [NSMutableArray new];
-    for(id obj in self){
+    for (id obj in self) {
         id item = mapBlock(obj);
-        if(item){
+        if (item) {
             [result addObject:item];
         }
     }
@@ -23,7 +23,7 @@
 
 -(instancetype)map:(NSArrayMapBlock)mapBlock{
     NSMutableArray * result = [NSMutableArray new];
-    for(id obj in self){
+    for (id obj in self) {
         [result addObject:mapBlock(obj)];
     }
     return result;
@@ -35,7 +35,7 @@
 
 -(instancetype)join{
     NSMutableArray * result = [NSMutableArray new];
-    for(NSArray * array in self){
+    for (NSArray * array in self) {
         [result addObjectsFromArray:array];
     }
     return result;
@@ -43,7 +43,7 @@
 
 +(NSArray *)arrayByRepeating:(id)obj times:(NSUInteger)times{
     NSMutableArray * result = [NSMutableArray new];
-    for(int i = 0; i < times; i++){
+    for (int i = 0; i < times; i++) {
         [result addObject:obj];
     }
     return result;

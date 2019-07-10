@@ -19,6 +19,6 @@
 
 @interface TableViewWithActions : NSTableView
 
-@property(weak) id<TableViewWithActionsDelegate> delegate;
+@property (weak) id<TableViewWithActionsDelegate> delegate;
 
 @end

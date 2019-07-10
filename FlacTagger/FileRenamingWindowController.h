@@ -11,8 +11,8 @@
 
 @interface FileRenaming : NSObject
 
-@property(readonly) FileWithTags * file;
-@property(readonly,getter = nnewFileName) NSString * newFileName;
+@property (readonly) FileWithTags * file;
+@property (readonly,getter = nnewFileName) NSString * newFileName;
 
 -(instancetype)initWithFile:(FileWithTags*)file
                 newFileName:(NSString*)newFileName;
@@ -36,8 +36,8 @@
 
 @interface FileRenamingWindowController : NSWindowController<NSTableViewDataSource,NSTableViewDelegate>
 
-@property(weak) id<FileRenamingWindowControllerDataSource> dataSource;
-@property(weak) id<FileRenamingWindowControllerDelegate> delegate;
+@property (weak) id<FileRenamingWindowControllerDataSource> dataSource;
+@property (weak) id<FileRenamingWindowControllerDelegate> delegate;
 
 -(void)refresh;
 

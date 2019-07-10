@@ -13,8 +13,8 @@
 
 @interface TagEditorWindowControllerResult : NSObject
 
-@property(readonly) FileWithTags * file;
-@property(readonly) NSDictionary * editedTags;
+@property (readonly) FileWithTags * file;
+@property (readonly) NSDictionary * editedTags;
 
 -(instancetype)initWithFile:(FileWithTags*)file
                  editedTags:(NSDictionary*)editedTags;
@@ -43,8 +43,8 @@ NSWindowDelegate,
 EditIndividualValuesWindowControllerDataSource,
 EditIndividualValuesWindowControllerDelegate>
 
-@property(weak) id<TagEditorWindowControllerDelegate> delegate;
-@property(weak) id<TagEditorWindowControllerDataSource> dataSource;
+@property (weak) id<TagEditorWindowControllerDelegate> delegate;
+@property (weak) id<TagEditorWindowControllerDataSource> dataSource;
 
 -(void)refresh;
 

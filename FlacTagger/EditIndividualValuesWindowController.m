@@ -12,7 +12,7 @@
 @implementation FileWithIndividualTagValue
 
 -(instancetype)initWithFile:(FileWithTags *)file tagValue:(NSString *)tagValue{
-    if(self = [super init]){
+    if (self = [super init]) {
         _file = file;
         _tagValue = tagValue;
     }
@@ -42,7 +42,7 @@
 
 - (IBAction)saveButtonDidPress:(id)sender {
     NSMutableArray * result = [NSMutableArray new];
-    for(int i = 0; i < self.files.count; i++){
+    for (int i = 0; i < self.files.count; i++) {
         FileWithIndividualTagValue * editedFile = [[FileWithIndividualTagValue alloc] initWithFile:[self.files[i] file] tagValue:self.tagValues[i]];
         [result addObject:editedFile];
     }
@@ -69,9 +69,9 @@
 
 -(id)tableView:(NSTableView *)tableView objectValueForTableColumn:(NSTableColumn *)tableColumn row:(NSInteger)row{
     FileWithIndividualTagValue * file = self.files[row];
-    if([tableColumn.identifier isEqualToString:@"FILE"]){
+    if ([tableColumn.identifier isEqualToString:@"FILE"]) {
         return [[file.file.filename pathComponents] lastObject];
-    }else{
+    } else {
         return self.tagValues[row];
     }
 }

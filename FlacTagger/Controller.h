@@ -14,17 +14,7 @@
 #import "TrackNumberingWindowController.h"
 #import "FileRenamingWindowController.h"
 
-@interface Controller : NSObject<
-MainWindowControllerDataSource,
-MainWindowControllerDelegate,
-TagEditorWindowControllerDelegate,
-TagFromDiscogsWindowControllerDelegate,
-TagEditorWindowControllerDataSource,
-TagFromDiscogsWindowControllerDataSource,
-TrackNumberingWindowControllerDelegate,
-TrackNumberingWindowControllerDataSource,
-FileRenamingWindowControllerDelegate,
-FileRenamingWindowControllerDataSource>
+@interface Controller : NSObject
 
 -(void)applicationDidFinishedLaunching:(AppDelegate *)appDelegate;
 

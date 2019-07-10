@@ -20,7 +20,7 @@ static NSString* const kIphoneUserAgent = @"Mozilla/5.0 (iPhone; CPU iPhone OS 6
 @implementation DiscogsTaggingPair
 
 -(instancetype)initWithFile:(FileWithTags *)file discogsData:(DiscogsReleaseTrack *)discogsData{
-    if(self = [super init]){
+    if (self = [super init]) {
         _file = file;
         _discogsData = discogsData;
     }
@@ -29,38 +29,37 @@ static NSString* const kIphoneUserAgent = @"Mozilla/5.0 (iPhone; CPU iPhone OS 6
 
 @end
 
-@interface TagFromDiscogsWindowController () <WebFrameLoadDelegate>
+@interface TagFromDiscogsWindowController () <WKNavigationDelegate>
 
 @property NSColor * missingDataBackgroundColor;
 
-@property (weak) IBOutlet NSTextField *albumArtistLabel;
-@property (weak) IBOutlet NSTextField *albumTitleLabel;
-@property (weak) IBOutlet NSTextField *releaseDateLabel;
-@property (weak) IBOutlet NSTextField *genreLabel;
+@property (nonatomic, weak) IBOutlet NSTextField *albumArtistLabel;
+@property (nonatomic, weak) IBOutlet NSTextField *albumTitleLabel;
+@property (nonatomic, weak) IBOutlet NSTextField *releaseDateLabel;
+@property (nonatomic, weak) IBOutlet NSTextField *genreLabel;
 
-@property (strong) IBOutlet NSView *releaseIdView;
-@property (weak) IBOutlet NSProgressIndicator *progressIndicator;
-@property (weak) IBOutlet WebView *webView;
+@property (nonatomic) IBOutlet NSView *releaseIdView;
+@property (nonatomic, weak) IBOutlet NSProgressIndicator *progressIndicator;
+@property (nonatomic, weak) IBOutlet WKWebView *webView;
 @property (nonatomic, readonly) BOOL isOnReleasePage;
 @property (nonatomic, readonly) NSString* releaseId;
-@property (strong) IBOutlet NSView *discogsDataPairingView;
-@property NSView * emptyView;
-@property (weak) IBOutlet SynchronizedScrollView *filesTableViewScrollView;
-@property (weak) IBOutlet NSTableView *filesTableView;
-@property (weak) IBOutlet SynchronizedScrollView *discogsDataTableViewScrollView;
-@property (weak) IBOutlet NSTableView *discogsDataTableView;
-@property (weak) IBOutlet NSPopUpButton *labelCatalogueButton;
+@property (nonatomic) IBOutlet NSView *discogsDataPairingView;
+@property (nonatomic) NSView * emptyView;
+@property (nonatomic, weak) IBOutlet SynchronizedScrollView *filesTableViewScrollView;
+@property (nonatomic, weak) IBOutlet NSTableView *filesTableView;
+@property (nonatomic, weak) IBOutlet SynchronizedScrollView *discogsDataTableViewScrollView;
+@property (nonatomic, weak) IBOutlet NSTableView *discogsDataTableView;
+@property (nonatomic, weak) IBOutlet NSPopUpButton *labelCatalogueButton;
 
-@property DiscogsReleaseData * releaseData;
-@property NSArray<FileWithTags*> * files;
+@property (nonatomic) DiscogsReleaseData * releaseData;
+@property (nonatomic) NSArray<FileWithTags*> * files;
 
-@property NSMutableArray * trackRowsData;
-@property NSMutableArray * fileRowsData;
+@property (nonatomic) NSMutableArray * trackRowsData;
+@property (nonatomic) NSMutableArray * fileRowsData;
 
 @end
 
 @implementation TagFromDiscogsWindowController
-@dynamic isOnReleasePage, releaseId;
 
 + (NSRegularExpression*)releaseIdRegexp {
     static NSRegularExpression* releaseIdRegexp;
@@ -83,23 +82,29 @@ static NSString* const kIphoneUserAgent = @"Mozilla/5.0 (iPhone; CPU iPhone OS 6
 }
 
 - (NSString*)releaseId {
-    if (self.webView.mainFrameURL == nil) return nil;
+    if (self.webView.URL == nil) {
+        return nil;
+    }
+
+    NSString* urlString = self.webView.URL.absoluteString;
     
     NSTextCheckingResult* match = [[[self class]
         releaseIdRegexp]
-        firstMatchInString:self.webView.mainFrameURL
+        firstMatchInString:urlString
         options:0
-        range:NSMakeRange(0, self.webView.mainFrameURL.length)];
-    if (!match || match.range.location == NSNotFound) return nil;
+        range:NSMakeRange(0, urlString.length)];
+    if (!match || match.range.location == NSNotFound) {
+        return nil;
+    }
     
-    return [self.webView.mainFrameURL substringWithRange:[match rangeAtIndex:1]];
+    return [urlString substringWithRange:[match rangeAtIndex:1]];
 }
 
 + (NSSet *)keyPathsForValuesAffectingReleaseId {
-    return [NSSet setWithObject:@"webView.mainFrameURL"];
+    return [NSSet setWithObject:@"webView.URL"];
 }
 
--(void)windowDidLoad{
+-(void)windowDidLoad {
     [super windowDidLoad];
     
     self.missingDataBackgroundColor = [NSColor colorWithRed:1 green:0.7 blue:0.7 alpha:1];
@@ -112,26 +117,22 @@ static NSString* const kIphoneUserAgent = @"Mozilla/5.0 (iPhone; CPU iPhone OS 6
     [self.discogsDataTableView registerForDraggedTypes:@[ (NSString *)kUTTypeData ]];
     
     self.webView.customUserAgent = kIphoneUserAgent; // force mobile version ;)
-    self.webView.frameLoadDelegate = self;
+    self.webView.navigationDelegate = self;
 }
 
-- (void)dealloc {
-    self.webView.frameLoadDelegate = nil;
-}
-
-- (void)webView:(WebView *)sender didStartProvisionalLoadForFrame:(WebFrame *)frame {
+- (void)webView:(WKWebView *)webView didStartProvisionalNavigation:(WKNavigation *)navigation {
     [self.progressIndicator startAnimation:nil];
 }
 
-- (void)webView:(WebView *)sender didFailProvisionalLoadWithError:(NSError *)error forFrame:(WebFrame *)frame {
+- (void)webView:(WKWebView *)webView didFailProvisionalNavigation:(WKNavigation *)navigation withError:(NSError *)error {
     [self.progressIndicator stopAnimation:nil];
 }
 
-- (void)webView:(WebView *)sender didFailLoadWithError:(NSError *)error forFrame:(WebFrame *)frame {
+- (void)webView:(WKWebView *)webView didFailNavigation:(WKNavigation *)navigation withError:(NSError *)error {
     [self.progressIndicator stopAnimation:nil];
 }
 
-- (void)webView:(WebView *)sender didFinishLoadForFrame:(WebFrame *)frame {
+- (void)webView:(WKWebView *)webView didFinishNavigation:(WKNavigation *)navigation {
     [self.progressIndicator stopAnimation:nil];
 }
 
@@ -145,7 +146,7 @@ static NSString* const kIphoneUserAgent = @"Mozilla/5.0 (iPhone; CPU iPhone OS 6
     }
 }
 
--(void)startWizard{
+-(void)startWizard {
     [self.window setContentSize:self.releaseIdView.frame.size];
     self.window.contentView = self.releaseIdView;
     
@@ -161,55 +162,55 @@ static NSString* const kIphoneUserAgent = @"Mozilla/5.0 (iPhone; CPU iPhone OS 6
         url = [NSURL URLWithString:@"https://discogs.com"];
     }
     
-    [self.webView.mainFrame loadRequest:[NSURLRequest requestWithURL:url]];
+    [self.webView loadRequest:[NSURLRequest requestWithURL:url]];
 }
 
 - (IBAction)releaseIdOKButtonPressed:(id)sender {
     NSAssert(self.isOnReleasePage, @"The webView must have a release's page opened!");
     
     self.releaseData = [self.dataSource tagFromDiscogsWindowController:self fetchDataForRelease:self.releaseId];
-    if(!self.releaseData) return;
+    if (!self.releaseData) return;
     
     self.trackRowsData = [NSMutableArray new];
     self.fileRowsData = [NSMutableArray new];
     NSInteger rowCount = MAX(self.releaseData.tracks.count, self.files.count);
-    for(int i = 0; i < rowCount; i++){
-        if(i < self.releaseData.tracks.count){
+    for (int i = 0; i < rowCount; i++) {
+        if (i < self.releaseData.tracks.count) {
             [self.trackRowsData addObject:self.releaseData.tracks[i]];
-        }else{
+        } else {
             [self.trackRowsData addObject:[NSNull null]];
         }
         
-        if(i < self.files.count){
+        if (i < self.files.count) {
             [self.fileRowsData addObject:self.files[i]];
-        }else{
+        } else {
             [self.fileRowsData addObject:[NSNull null]];
         }
     }
     
-    if(self.releaseData.albumArtists.count > 0){
+    if (self.releaseData.albumArtists.count > 0) {
         self.albumArtistLabel.stringValue = [self.releaseData.albumArtists componentsJoinedByString:@", "];
-    }else{
+    } else {
         self.albumArtistLabel.stringValue = @"[ no data ]";
     }
     
     self.albumTitleLabel.stringValue = self.releaseData.album;
     
-    if(self.releaseData.releaseDate){
+    if (self.releaseData.releaseDate) {
         self.releaseDateLabel.stringValue = self.releaseData.releaseDate;
-    }else{
+    } else {
         self.releaseDateLabel.stringValue = @"[ no data ]";
     }
     
-    if(self.releaseData.genres.count > 0){
+    if (self.releaseData.genres.count > 0) {
         self.genreLabel.stringValue = [self.releaseData.genres componentsJoinedByString:@", "];
-    }else{
+    } else {
         self.genreLabel.stringValue = @"[ no data ]";
     }
     
     [self.labelCatalogueButton removeAllItems];
     [self.labelCatalogueButton addItemWithTitle:@"[ unknown ]"];
-    if(self.releaseData.catalogEntries.count > 0) {
+    if (self.releaseData.catalogEntries.count > 0) {
         for (DiscogsReleaseCatalogEntry* catalogEntry in self.releaseData.catalogEntries) {
             [self.labelCatalogueButton addItemWithTitle:[NSString stringWithFormat:@"%@ / %@", catalogEntry.label, catalogEntry.catalog]];
         }
@@ -231,14 +232,14 @@ static NSString* const kIphoneUserAgent = @"Mozilla/5.0 (iPhone; CPU iPhone OS 6
 - (IBAction)discogsDataPairingOKButtonPressed:(id)sender {
     NSMutableArray * pairs = [NSMutableArray new];
     NSAssert(self.trackRowsData.count == self.fileRowsData.count, @"File rows count and track rows count must be equal!");
-    for(int i = 0; i < self.trackRowsData.count; i++){
-        if(self.trackRowsData[i] != [NSNull null] && self.fileRowsData[i] != [NSNull null]){
+    for (int i = 0; i < self.trackRowsData.count; i++) {
+        if (self.trackRowsData[i] != [NSNull null] && self.fileRowsData[i] != [NSNull null]) {
             DiscogsTaggingPair * pair = [[DiscogsTaggingPair alloc] initWithFile:self.fileRowsData[i] discogsData:self.trackRowsData[i]];
             [pairs addObject:pair];
         }
     }
     DiscogsReleaseCatalogEntry* catalogEntry = nil;
-    if(self.labelCatalogueButton.indexOfSelectedItem > 0) {
+    if (self.labelCatalogueButton.indexOfSelectedItem > 0) {
         catalogEntry = self.releaseData.catalogEntries[self.labelCatalogueButton.indexOfSelectedItem - 1];
     }
     [self.delegate tagFromDiscogsWindowController:self finishedWithPairs:pairs catalogEntry:catalogEntry];
@@ -251,27 +252,27 @@ static NSString* const kIphoneUserAgent = @"Mozilla/5.0 (iPhone; CPU iPhone OS 6
 -(NSView *)tableView:(NSTableView *)tableView viewForTableColumn:(NSTableColumn *)tableColumn row:(NSInteger)row{
     TagFromDiscogsTableViewCell * cell = [tableView makeViewWithIdentifier:tableColumn.identifier owner:self];
     
-    if(tableView == self.discogsDataTableView){
-        if(self.trackRowsData[row] == [NSNull null]){
+    if (tableView == self.discogsDataTableView) {
+        if (self.trackRowsData[row] == [NSNull null]) {
             cell.textField.stringValue = @"[ no data ]";
-        }else{
+        } else {
             DiscogsReleaseTrack * track = self.trackRowsData[row];
             NSString * artistsString;
-            if(track.artists.count > 0){
+            if (track.artists.count > 0) {
                 artistsString = [track.artists componentsJoinedByString:@"; "];
-            }else{
+            } else {
                 artistsString = [self.releaseData.albumArtists componentsJoinedByString:@"; "];
             }
             cell.textField.stringValue = [NSString stringWithFormat:@"%@ - %@ - %@", track.position, artistsString, track.title];
         }
-    }else if(tableView == self.filesTableView){
-        if(self.fileRowsData[row] == [NSNull null]){
+    } else if (tableView == self.filesTableView) {
+        if (self.fileRowsData[row] == [NSNull null]) {
             cell.textField.stringValue = @"[ no file ]";
-        }else{
+        } else {
             FileWithTags * file = self.fileRowsData[row];
             cell.textField.stringValue = [[file.filename pathComponents] lastObject];
         }
-    }else{
+    } else {
         NSAssert(NO, @"Invalid tableView: '%@", tableView);
         return nil;
     }
@@ -280,43 +281,50 @@ static NSString* const kIphoneUserAgent = @"Mozilla/5.0 (iPhone; CPU iPhone OS 6
 }
 
 -(void)tableView:(NSTableView *)tableView didAddRowView:(NSTableRowView *)rowView forRow:(NSInteger)row{
-    if((tableView == self.discogsDataTableView && self.trackRowsData[row] == [NSNull null]) ||
-       (tableView == self.filesTableView && self.fileRowsData[row] == [NSNull null])){
+    if ((tableView == self.discogsDataTableView && self.trackRowsData[row] == [NSNull null]) ||
+       (tableView == self.filesTableView && self.fileRowsData[row] == [NSNull null])) {
         rowView.backgroundColor = self.missingDataBackgroundColor;
     }
 }
 
 -(NSDragOperation)tableView:(NSTableView *)tableView validateDrop:(id<NSDraggingInfo>)info proposedRow:(NSInteger)row proposedDropOperation:(NSTableViewDropOperation)dropOperation{
-    if(dropOperation == NSTableViewDropAbove && tableView == [info draggingSource]){
+    if (dropOperation == NSTableViewDropAbove && tableView == [info draggingSource]) {
         return NSDragOperationMove;
-    }else{
+    } else {
         return NSDragOperationNone;
     }
 }
 
--(id<NSPasteboardWriting>)tableView:(NSTableView *)tableView pasteboardWriterForRow:(NSInteger)row{
+-(id<NSPasteboardWriting>)tableView:(NSTableView *)tableView pasteboardWriterForRow:(NSInteger)row {
+    NSIndexSet* indexes = [tableView.selectedRowIndexes containsIndex:row] ? tableView.selectedRowIndexes : [NSIndexSet indexSetWithIndex:row];
+
+    NSError* error;
+    NSData * data = [NSKeyedArchiver archivedDataWithRootObject:indexes
+                                          requiringSecureCoding:NO
+                                                          error:&error];
+    NSAssert(data != nil, @"%@", error);
+
     NSPasteboardItem * result = [[NSPasteboardItem alloc] init];
-    NSData * data;
-    if(tableView.selectedRowIndexes.count > 0 && [tableView.selectedRowIndexes containsIndex:row]){
-        data = [NSKeyedArchiver archivedDataWithRootObject:tableView.selectedRowIndexes];
-    }else{
-        data = [NSKeyedArchiver archivedDataWithRootObject:[NSIndexSet indexSetWithIndex:row]];
-    }
     [result setData:data forType:(NSString*)kUTTypeData];
+
     return result;
 }
 
 -(BOOL)tableView:(NSTableView *)tableView acceptDrop:(id<NSDraggingInfo>)info row:(NSInteger)row dropOperation:(NSTableViewDropOperation)dropOperation{
-    
-    NSIndexSet * indexSet = [NSKeyedUnarchiver unarchiveObjectWithData:[[info draggingPasteboard] dataForType:(NSString *)kUTTypeData]];
+    NSError* error;
+    NSIndexSet* indexSet = [NSKeyedUnarchiver unarchivedObjectOfClass:[NSIndexSet class]
+                                                             fromData:[info.draggingPasteboard dataForType:(NSString *)kUTTypeData]
+                                                                error:&error];
+    NSAssert(indexSet != nil, @"%@", error);
+
     NSInteger indexesLessThanTargetIndex = [indexSet countOfIndexesInRange:NSMakeRange(0, row)];
     
     NSMutableArray * rowData;
-    if(tableView == self.filesTableView){
+    if (tableView == self.filesTableView) {
         rowData = self.fileRowsData;
-    }else if(tableView == self.discogsDataTableView){
+    } else if (tableView == self.discogsDataTableView) {
         rowData = self.trackRowsData;
-    }else{
+    } else {
         NSAssert(NO, @"Invalid tableView: '%@'", tableView);
     }
     

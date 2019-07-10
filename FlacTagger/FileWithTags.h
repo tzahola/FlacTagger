@@ -17,8 +17,8 @@ enum {
 
 @interface FileWithTags : NSObject
 
-@property(readonly) NSString * filename;
-@property(readonly) NSDictionary * tags;
+@property (readonly) NSString * filename;
+@property (readonly) NSDictionary * tags;
 
 -(instancetype)initWithFilename:(NSString *)filename error:(NSError * __autoreleasing *)error;
 -(BOOL)refreshWithError:(NSError * __autoreleasing *)error;

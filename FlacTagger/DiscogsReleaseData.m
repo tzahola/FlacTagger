@@ -23,7 +23,7 @@
 @implementation DiscogsReleaseTrack
 
 -(instancetype)initWithPosition:(NSString *)position title:(NSString *)title artists:(NSArray *)artists {
-    if(self = [super init]){
+    if (self = [super init]) {
         _position = [position copy];
         _title = [title copy];
         _artists = [artists copy];
@@ -41,7 +41,7 @@
                              tracks:(NSArray *)tracks
                         releaseDate:(NSString *)releaseDate
                      catalogEntries:(NSArray *)catalogEntries {
-    if(self = [super init]){
+    if (self = [super init]) {
         _album = [album copy];
         _albumArtists = [albumArtists copy];
         _genres = [genres copy];
@@ -68,12 +68,12 @@
          sortedArrayUsingComparator:^NSComparisonResult(NSDictionary*  _Nonnull obj1, NSDictionary*  _Nonnull obj2) {
             return [obj1[@"position"] compare:obj2[@"position"] options:NSNumericSearch];
         }];
-    for(NSDictionary * track in discogsTracklist){
+    for (NSDictionary * track in discogsTracklist) {
         NSString* type = track[@"type_"];
         if ([type isEqualToString:@"track"]) {
             NSString * title = track[@"title"];
             NSMutableArray * artists = [NSMutableArray new];
-            for(NSDictionary * artist in track[@"artists"]){
+            for (NSDictionary * artist in track[@"artists"]) {
                 [artists addObject:artist[@"name"]];
             }
             NSString* position = track[@"position"];
@@ -85,7 +85,7 @@
             if ([track[@"position"] length] > 0) {
                 [positions addObject:track[@"position"]];
             }
-            for(NSDictionary * artist in track[@"artists"]){
+            for (NSDictionary * artist in track[@"artists"]) {
                 [artists addObject:artist[@"name"]];
             }
             
@@ -94,7 +94,7 @@
                 if ([subtrack[@"position"] length] > 0) {
                     [positions addObject:subtrack[@"position"]];
                 }
-                for(NSDictionary * artist in subtrack[@"artists"]){
+                for (NSDictionary * artist in subtrack[@"artists"]) {
                     [artists addObject:artist[@"name"]];
                 }
                 if ([subtrack[@"title"] length] > 0) {
@@ -114,12 +114,12 @@
     }
     
     NSMutableArray * albumArtists = [NSMutableArray new];
-    for(NSDictionary * albumArtist in discogsDictionary[@"artists"]){
+    for (NSDictionary * albumArtist in discogsDictionary[@"artists"]) {
         [albumArtists addObject:albumArtist[@"name"]];
     }
     
     NSMutableArray * genres = [NSMutableArray new];
-    for(NSString * genre in discogsDictionary[@"genres"]){
+    for (NSString * genre in discogsDictionary[@"genres"]) {
         [genres addObject:genre];
     }
     

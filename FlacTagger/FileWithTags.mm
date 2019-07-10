@@ -17,10 +17,10 @@ NSString * FileWithTagsErrorDomain = @"FileWithTagsErrorDomain";
 @implementation FileWithTags
 
 -(instancetype)initWithFilename:(NSString *)filename error:(NSError *__autoreleasing *)error{
-    if(self = [super init]){
+    if (self = [super init]) {
         _filename = [filename copy];
         BOOL didRefresh = [self refreshWithError:error];
-        if(!didRefresh){
+        if (!didRefresh) {
             return nil;
         }
     }
@@ -32,7 +32,7 @@ NSString * FileWithTagsErrorDomain = @"FileWithTagsErrorDomain";
     FLAC::Metadata::Chain metadataChain;
     metadataChain.read(self.filename.UTF8String);
     
-    if(!metadataChain.is_valid()){
+    if (!metadataChain.is_valid()) {
         *error = [NSError errorWithDomain:FileWithTagsErrorDomain code:FileWithTagsInvalidFileError userInfo:nil];
         return NO;
     }
@@ -40,16 +40,16 @@ NSString * FileWithTagsErrorDomain = @"FileWithTagsErrorDomain";
     FLAC::Metadata::Iterator metadataIterator;
     metadataIterator.init(metadataChain);
     
-    if(!metadataIterator.is_valid()){
+    if (!metadataIterator.is_valid()) {
         *error = [NSError errorWithDomain:FileWithTagsErrorDomain code:FileWithTagsInvalidFileError userInfo:nil];
         return NO;
     }
     
     do{
-        if(metadataIterator.get_block_type() == FLAC__METADATA_TYPE_VORBIS_COMMENT){
+        if (metadataIterator.get_block_type() == FLAC__METADATA_TYPE_VORBIS_COMMENT) {
             metadataIterator.delete_block(true);
         }
-    } while(metadataIterator.next());
+    } while (metadataIterator.next());
     
     FLAC::Metadata::VorbisComment * vorbisComment = new FLAC::Metadata::VorbisComment();
     
@@ -68,7 +68,7 @@ NSString * FileWithTagsErrorDomain = @"FileWithTagsErrorDomain";
     metadataChain.merge_padding();
     bool didWrite = metadataChain.write(true, false);
     
-    if(!didWrite){
+    if (!didWrite) {
         *error = [NSError errorWithDomain:FileWithTagsErrorDomain code:FileWithTagsFailedToWriteError userInfo:nil];
         return NO;
     }
@@ -82,12 +82,12 @@ NSString * FileWithTagsErrorDomain = @"FileWithTagsErrorDomain";
     FLAC::Metadata::VorbisComment vorbisComments;
     FLAC::Metadata::get_tags(self.filename.UTF8String, vorbisComments);
     
-    if(!vorbisComments.is_valid()){
+    if (!vorbisComments.is_valid()) {
         *error = [NSError errorWithDomain:FileWithTagsErrorDomain code:FileWithTagsInvalidFileError userInfo:nil];
         return NO;
     }
     
-    for(int i = 0; i < vorbisComments.get_num_comments(); i++){
+    for (int i = 0; i < vorbisComments.get_num_comments(); i++) {
         FLAC::Metadata::VorbisComment::Entry entry = vorbisComments.get_comment(i);
         if (!entry.is_valid()) {
             NSLog(@"Invalid vorbis comment in %@", self.filename);
@@ -106,11 +106,11 @@ NSString * FileWithTagsErrorDomain = @"FileWithTagsErrorDomain";
 
 -(BOOL)renameTo:(NSString *)filename error:(NSError *__autoreleasing *)error{
     NSString * newPath = [[self.filename stringByDeletingLastPathComponent] stringByAppendingPathComponent:filename];
-    if([newPath isEqualToString:_filename]){
+    if ([newPath isEqualToString:_filename]) {
         return YES;
-    }else{
+    } else {
         BOOL didRename = [[NSFileManager defaultManager] moveItemAtPath:self.filename toPath:newPath error:error];
-        if(didRename){
+        if (didRename) {
             _filename = newPath;
         }
         return didRename;

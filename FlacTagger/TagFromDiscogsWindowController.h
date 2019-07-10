@@ -15,8 +15,8 @@
 
 @interface DiscogsTaggingPair : NSObject
 
-@property(readonly) FileWithTags * file;
-@property(readonly) DiscogsReleaseTrack * discogsData;
+@property (readonly) FileWithTags * file;
+@property (readonly) DiscogsReleaseTrack * discogsData;
 
 -(instancetype)initWithFile:(FileWithTags*)file
                 discogsData:(DiscogsReleaseTrack*)discogsData;
@@ -45,8 +45,8 @@
 
 @interface TagFromDiscogsWindowController : NSWindowController<NSWindowDelegate,NSTableViewDataSource,NSTableViewDelegate>
 
-@property(weak) id<TagFromDiscogsWindowControllerDelegate> delegate;
-@property(weak) id<TagFromDiscogsWindowControllerDataSource> dataSource;
+@property (weak) id<TagFromDiscogsWindowControllerDelegate> delegate;
+@property (weak) id<TagFromDiscogsWindowControllerDataSource> dataSource;
 
 -(void)startWizard;
 

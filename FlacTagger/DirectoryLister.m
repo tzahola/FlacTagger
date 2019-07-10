@@ -10,7 +10,7 @@
 #import <dirent.h>
 #import <sys/stat.h>
 
-NSString * DirecotryListerErrorDomain = @"DirecotryListerErrorDomain";
+NSErrorDomain const DirectoryListerErrorDomain = @"DirecotryListerErrorDomain";
 
 @implementation DirectoryLister
 
@@ -20,27 +20,35 @@ NSString * DirecotryListerErrorDomain = @"DirecotryListerErrorDomain";
     NSMutableArray * result = [NSMutableArray new];
     
     DIR * dir = opendir(standardizedPath.UTF8String);
-    if(!dir){
-        *error = [NSError errorWithDomain:DirecotryListerErrorDomain code:DirecotryListerGeneralError userInfo:nil];
+    if (!dir) {
+        *error = [NSError errorWithDomain:DirectoryListerErrorDomain
+                                     code:DirectoryListerGeneralError
+                                 userInfo:@{ NSLocalizedDescriptionKey: @(strerror(errno)) }];
         return nil;
     }
-    
+
+    NSMutableArray<NSString*>* subdirPaths = [NSMutableArray new];
+
     struct dirent * dirent;
-    while((dirent = readdir(dir))){
-        if(strcmp(".", dirent->d_name) != 0 && strcmp("..", dirent->d_name) != 0){
+    while ((dirent = readdir(dir))) {
+        if (strcmp(".", dirent->d_name) != 0 && strcmp("..", dirent->d_name) != 0) {
             NSString * path = [standardizedPath stringByAppendingPathComponent:[NSString stringWithUTF8String:dirent->d_name]];
-            if(dirent->d_type == DT_DIR){
-                NSArray * entries = [self listFilesRecursivelyFrom:path withFilter:filterBlock error:error];
-                if(!entries){
-                    return nil;
-                }
-                [result addObjectsFromArray:entries];
-            }else if(filterBlock(path)){
+            if (dirent->d_type == DT_DIR) {
+                [subdirPaths addObject:path];
+            } else if (filterBlock(path)) {
                 [result addObject:path];
             }
         }
     }
     closedir(dir);
+
+    for (NSString* subdirPath in subdirPaths) {
+        NSArray * entries = [self listFilesRecursivelyFrom:subdirPath withFilter:filterBlock error:error];
+        if (!entries) {
+            return nil;
+        }
+        [result addObjectsFromArray:entries];
+    }
     
     return result;
 }

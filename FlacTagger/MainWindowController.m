@@ -9,6 +9,35 @@
 #import "MainWindowController.h"
 #import "FileWithTags.h"
 
+@interface NSPasteboard (FileURLs)
+
+@property (nonatomic, nullable, readonly) NSArray<NSURL*>* fileURLs;
+
+@end
+
+@implementation NSPasteboard (FileURLs)
+
+- (NSArray<NSURL *> *)fileURLs {
+    NSArray<NSPasteboardItem*>* items = self.pasteboardItems;
+    if (items == nil) {
+        return nil;
+    }
+
+    NSMutableArray<NSURL*>* fileURLs = [NSMutableArray new];
+    for (NSPasteboardItem* item in items) {
+        NSData* fileURLData = [item dataForType:NSPasteboardTypeFileURL];
+        NSAssert(fileURLData != nil, @"");
+
+        NSURL* fileURL = [NSURL URLWithDataRepresentation:fileURLData relativeToURL:nil];
+        NSAssert(fileURL.isFileURL, @"");
+
+        [fileURLs addObject:fileURL];
+    }
+    return fileURLs;
+}
+
+@end
+
 @interface MainWindowController ()
 
 @property (weak) IBOutlet NSTableView *tableView;
@@ -36,7 +65,7 @@
 
 -(void)windowDidLoad{
     [super windowDidLoad];
-    [self.tableView registerForDraggedTypes:@[ NSFilenamesPboardType ]];
+    [self.tableView registerForDraggedTypes:@[ NSPasteboardTypeFileURL ]];
     
     NSTableColumn * titleColumn = [[NSTableColumn alloc] initWithIdentifier:@"TITLE"];
     titleColumn.headerCell = [[NSTableHeaderCell alloc] initTextCell:@"Title"];
@@ -65,42 +94,37 @@
 }
 
 -(id)tableView:(NSTableView *)tableView objectValueForTableColumn:(NSTableColumn *)tableColumn row:(NSInteger)row{
-    if(tableView == self.tableView){
+    if (tableView == self.tableView) {
         FileWithTags * file = self.files[row];
         NSString * value = file.tags[tableColumn.identifier];
         return value == nil ? @"?" : value;
-    }else{
+    } else {
         return nil;
     }
 }
 
 - (IBAction)paste:(id)sender {
-    NSArray * filenames = [[NSPasteboard generalPasteboard] propertyListForType:NSFilenamesPboardType];
-    [self.delegate mainWindowController:self didDropFiles:filenames];
+    [self.delegate mainWindowController:self didDropFileURLs:NSPasteboard.generalPasteboard.fileURLs];
 }
 
 -(NSDragOperation)tableView:(NSTableView *)tableView validateDrop:(id<NSDraggingInfo>)info proposedRow:(NSInteger)row proposedDropOperation:(NSTableViewDropOperation)dropOperation{
-    if(tableView == self.tableView){
-        if(dropOperation == NSTableViewDropAbove){
+    if (tableView == self.tableView) {
+        if (dropOperation == NSTableViewDropAbove) {
             return NSDragOperationEvery;
-        }else{
+        } else {
             return NSDragOperationNone;
         }
-    }else{
+    } else {
         return NSDragOperationNone;
     }
 }
 
--(BOOL)tableView:tableView
-      acceptDrop:(id<NSDraggingInfo>)info
-             row:(NSInteger)row
-   dropOperation:(NSTableViewDropOperation)dropOperation{
-    
-    if(tableView != self.tableView) return NO;
-    
-    NSPasteboard * pasteboard = [info draggingPasteboard];
-    NSArray * filenames = [pasteboard propertyListForType:NSFilenamesPboardType];
-    [self.delegate mainWindowController:self didDropFiles:filenames];
+-(BOOL)tableView:tableView acceptDrop:(id<NSDraggingInfo>)info row:(NSInteger)row dropOperation:(NSTableViewDropOperation)dropOperation {
+    if (tableView != self.tableView) {
+        return NO;
+    }
+
+    [self.delegate mainWindowController:self didDropFileURLs:NSPasteboard.generalPasteboard.fileURLs];
     
     return YES;
 }

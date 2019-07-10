@@ -13,8 +13,8 @@
 
 @interface FileWithIndividualTagValue : NSObject
 
-@property(readonly) FileWithTags * file;
-@property(readonly) NSString * tagValue;
+@property (readonly) FileWithTags * file;
+@property (readonly) NSString * tagValue;
 
 -(instancetype)initWithFile:(FileWithTags*)file
                    tagValue:(NSString*)tagValue;
@@ -37,8 +37,8 @@
 
 @interface EditIndividualValuesWindowController : NSWindowController<NSTableViewDataSource,NSTableViewDelegate>
 
-@property(weak) id<EditIndividualValuesWindowControllerDelegate> delegate;
-@property(weak) id<EditIndividualValuesWindowControllerDataSource> dataSource;
+@property (weak) id<EditIndividualValuesWindowControllerDelegate> delegate;
+@property (weak) id<EditIndividualValuesWindowControllerDataSource> dataSource;
 
 -(void)refresh;
 

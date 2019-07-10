@@ -8,10 +8,10 @@
 
 #import <Foundation/Foundation.h>
 
-extern NSString * DirecotryListerErrorDomain;
+extern NSErrorDomain const DirectoryListerErrorDomain;
 
-enum{
-    DirecotryListerGeneralError
+enum {
+    DirectoryListerGeneralError
 };
 
 typedef BOOL(^FileFilterBlock)(NSString * fileName);

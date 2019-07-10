@@ -11,11 +11,11 @@
 
 @interface TrackNumberingResult : NSObject
 
-@property(readonly) FileWithTags * file;
-@property(readonly) NSInteger discNumber;
-@property(readonly) NSInteger trackNumber;
-@property(readonly) NSInteger discTotal;
-@property(readonly) NSInteger trackTotal;
+@property (readonly) FileWithTags * file;
+@property (readonly) NSInteger discNumber;
+@property (readonly) NSInteger trackNumber;
+@property (readonly) NSInteger discTotal;
+@property (readonly) NSInteger trackTotal;
 
 -(instancetype)initWithFile:(FileWithTags*)file
                  discNumber:(NSInteger)discNumber
@@ -43,8 +43,8 @@
 
 @interface TrackNumberingWindowController : NSWindowController<NSTableViewDataSource,NSTableViewDelegate,NSTextFieldDelegate>
 
-@property(weak) id<TrackNumberingWindowControllerDataSource> dataSource;
-@property(weak) id<TrackNumberingWindowControllerDelegate> delegate;
+@property (weak) id<TrackNumberingWindowControllerDataSource> dataSource;
+@property (weak) id<TrackNumberingWindowControllerDelegate> delegate;
 
 -(void)refresh;
 
