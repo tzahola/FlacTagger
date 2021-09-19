@@ -54,8 +54,8 @@ NSString * FileWithTagsErrorDomain = @"FileWithTagsErrorDomain";
     FLAC::Metadata::VorbisComment * vorbisComment = new FLAC::Metadata::VorbisComment();
     
     [tags enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) {
-        NSString * tag = key;
-        NSString * value = obj;
+        NSString * tag = [[key stringByTrimmingCharactersInSet:NSCharacterSet.whitespaceAndNewlineCharacterSet] uppercaseString];
+        NSString * value = [obj stringByTrimmingCharactersInSet:NSCharacterSet.whitespaceAndNewlineCharacterSet];
         
         FLAC::Metadata::VorbisComment::Entry entry(tag.UTF8String, value.UTF8String);
         bool didAppend = vorbisComment->append_comment(entry);

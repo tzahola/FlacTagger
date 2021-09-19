@@ -35,7 +35,6 @@ static NSString* const kIphoneUserAgent = @"Mozilla/5.0 (iPhone; CPU iPhone OS 6
 
 @property (nonatomic, weak) IBOutlet NSTextField *albumArtistLabel;
 @property (nonatomic, weak) IBOutlet NSTextField *albumTitleLabel;
-@property (nonatomic, weak) IBOutlet NSTextField *releaseDateLabel;
 @property (nonatomic, weak) IBOutlet NSTextField *genreLabel;
 
 @property (nonatomic) IBOutlet NSView *releaseIdView;
@@ -54,8 +53,13 @@ static NSString* const kIphoneUserAgent = @"Mozilla/5.0 (iPhone; CPU iPhone OS 6
 @property (nonatomic) DiscogsReleaseData * releaseData;
 @property (nonatomic) NSArray<FileWithTags*> * files;
 
-@property (nonatomic) NSMutableArray * trackRowsData;
-@property (nonatomic) NSMutableArray * fileRowsData;
+@property (nonatomic) NSMutableArray* trackRowsData; // DiscogsReleaseTrack or NSNull
+@property (nonatomic) NSMutableArray* fileRowsData; // FileWithTags or NSNull
+
+@property (nonatomic, readonly) BOOL canMergeTracks;
+@property (nonatomic, readonly) BOOL canUseFullDate;
+@property (nonatomic) BOOL useFullDate;
+@property (nonatomic, nullable, readonly) NSString* releaseDateLabelString;
 
 @end
 
@@ -187,20 +191,9 @@ static NSString* const kIphoneUserAgent = @"Mozilla/5.0 (iPhone; CPU iPhone OS 6
             [self.fileRowsData addObject:[NSNull null]];
         }
     }
-    
-    if (self.releaseData.albumArtists.count > 0) {
-        self.albumArtistLabel.stringValue = [self.releaseData.albumArtists componentsJoinedByString:@", "];
-    } else {
-        self.albumArtistLabel.stringValue = @"[ no data ]";
-    }
-    
+
+    self.albumArtistLabel.stringValue = self.releaseData.albumArtist ?: @"[ no data ]";
     self.albumTitleLabel.stringValue = self.releaseData.album;
-    
-    if (self.releaseData.releaseDate) {
-        self.releaseDateLabel.stringValue = self.releaseData.releaseDate;
-    } else {
-        self.releaseDateLabel.stringValue = @"[ no data ]";
-    }
     
     if (self.releaseData.genres.count > 0) {
         self.genreLabel.stringValue = [self.releaseData.genres componentsJoinedByString:@", "];
@@ -242,11 +235,11 @@ static NSString* const kIphoneUserAgent = @"Mozilla/5.0 (iPhone; CPU iPhone OS 6
     if (self.labelCatalogueButton.indexOfSelectedItem > 0) {
         catalogEntry = self.releaseData.catalogEntries[self.labelCatalogueButton.indexOfSelectedItem - 1];
     }
-    [self.delegate tagFromDiscogsWindowController:self finishedWithPairs:pairs catalogEntry:catalogEntry];
+    [self.delegate tagFromDiscogsWindowController:self finishedWithPairs:pairs catalogEntry:catalogEntry useFullDate:self.useFullDate];
 }
 
 -(NSInteger)numberOfRowsInTableView:(NSTableView *)tableView{
-    return MAX(self.releaseData.tracks.count, self.files.count);
+    return MAX(self.trackRowsData.count, self.files.count);
 }
 
 -(NSView *)tableView:(NSTableView *)tableView viewForTableColumn:(NSTableColumn *)tableColumn row:(NSInteger)row{
@@ -257,12 +250,7 @@ static NSString* const kIphoneUserAgent = @"Mozilla/5.0 (iPhone; CPU iPhone OS 6
             cell.textField.stringValue = @"[ no data ]";
         } else {
             DiscogsReleaseTrack * track = self.trackRowsData[row];
-            NSString * artistsString;
-            if (track.artists.count > 0) {
-                artistsString = [track.artists componentsJoinedByString:@"; "];
-            } else {
-                artistsString = [self.releaseData.albumArtists componentsJoinedByString:@"; "];
-            }
+            NSString * artistsString = track.artist ?:  self.releaseData.albumArtist ?: @"[ no data ]";
             cell.textField.stringValue = [NSString stringWithFormat:@"%@ - %@ - %@", track.position, artistsString, track.title];
         }
     } else if (tableView == self.filesTableView) {
@@ -336,6 +324,78 @@ static NSString* const kIphoneUserAgent = @"Mozilla/5.0 (iPhone; CPU iPhone OS 6
     [tableView reloadData];
     
     return YES;
+}
+
+- (BOOL)canMergeTracks {
+    if (self.discogsDataTableView.numberOfSelectedRows <= 1) {
+        return NO;
+    }
+    for (id track in [self.trackRowsData objectsAtIndexes:self.discogsDataTableView.selectedRowIndexes]) {
+        if (track == NSNull.null) {
+            return NO;
+        }
+    }
+    return YES;
+}
+
++ (NSSet<NSString *> *)keyPathsForValuesAffectingCanMergeTracks {
+    return [NSSet setWithObject:@"discogsDataTableView.numberOfSelectedRows"];
+}
+
+- (BOOL)canUseFullDate {
+    return self.releaseData.releaseDate.length > 4;
+}
+
++ (NSSet<NSString *> *)keyPathsForValuesAffectingCanUseFullDate {
+    return [NSSet setWithObject:@"releaseData.releaseDate"];
+}
+
+- (NSString *)releaseDateLabelString {
+    if (!self.releaseData.releaseDate) {
+        return @"[ no data ]";
+    }
+    NSString* originalDate = self.useFullDate ? self.releaseData.originalDate : [self.releaseData.originalDate substringToIndex:4];
+    NSString* releaseDate = self.useFullDate ? self.releaseData.releaseDate : [self.releaseData.releaseDate substringToIndex:4];
+    return originalDate ? [NSString stringWithFormat:@"%@ (original: %@)", releaseDate, originalDate] : releaseDate;
+}
+
++ (NSSet<NSString *> *)keyPathsForValuesAffectingReleaseDateLabelString {
+    return [NSSet setWithArray:@[@"releaseData.releaseDate", @"useFullDate"]];
+}
+
+- (IBAction)mergeTracks:(id)sender {
+    NSMutableString* mergedArtists = nil;
+    NSMutableString* mergedTitles = nil;
+    NSIndexSet* mergedTrackIndexes = self.discogsDataTableView.selectedRowIndexes;
+
+    for (DiscogsReleaseTrack* track in [self.trackRowsData objectsAtIndexes:mergedTrackIndexes]) {
+        if (track.artist != nil) {
+            if (mergedArtists == nil) {
+                mergedArtists = [track.artist mutableCopy];
+            } else {
+                [mergedArtists appendString:@" / "];
+                [mergedArtists appendString:track.artist];
+            }
+        }
+
+        if (mergedTitles == nil) {
+            mergedTitles = [track.title mutableCopy];
+        } else {
+            [mergedTitles appendString:@" / "];
+            [mergedTitles appendString:track.title];
+        }
+    }
+
+    DiscogsReleaseTrack* firstTrack = self.trackRowsData[mergedTrackIndexes.firstIndex];
+    DiscogsReleaseTrack* mergedTrack = [[DiscogsReleaseTrack alloc] initWithPosition:firstTrack.position title:mergedTitles artist:mergedArtists];
+
+    NSMutableArray* replacementRows = [[NSMutableArray alloc] initWithCapacity:mergedTrackIndexes.count];
+    for (int i = 0; i < mergedTrackIndexes.count; i++) {
+        [replacementRows addObject:i == 0 ? mergedTrack : NSNull.null];
+    }
+    [self.trackRowsData replaceObjectsAtIndexes:mergedTrackIndexes withObjects:replacementRows];
+
+    [self.discogsDataTableView reloadData];
 }
 
 @end

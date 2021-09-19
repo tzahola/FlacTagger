@@ -9,6 +9,8 @@
 #import "FileRenamingWindowController.h"
 #import <objc/runtime.h>
 
+const int kMaxFileNameLength = 200;
+
 @implementation FileRenaming
 
 -(instancetype)initWithFile:(FileWithTags *)file newFileName:(NSString *)newFileName{
@@ -91,9 +93,16 @@
         [newFileName replaceOccurrencesOfString:@"?" withString:@"_" options:NSLiteralSearch range:NSMakeRange(0, newFileName.length)];
         [newFileName replaceOccurrencesOfString:@"\\" withString:@"_" options:NSLiteralSearch range:NSMakeRange(0, newFileName.length)];
         [newFileName replaceOccurrencesOfString:@"|" withString:@"_" options:NSLiteralSearch range:NSMakeRange(0, newFileName.length)];
-        [newFileName appendFormat:@".%@",file.filename.pathExtension];
-        [self.renamedFileNames addObject:[newFileName stringByFoldingWithOptions:NSDiacriticInsensitiveSearch
-                                                                          locale:[NSLocale localeWithLocaleIdentifier:@"en_US"]]];
+        newFileName = [[newFileName stringByFoldingWithOptions:NSDiacriticInsensitiveSearch locale:[NSLocale localeWithLocaleIdentifier:@"en_US"]] mutableCopy];
+
+        NSString* extension = file.filename.pathExtension;
+        if (newFileName.length + extension.length > kMaxFileNameLength) {
+            newFileName = [[newFileName substringToIndex:kMaxFileNameLength - (@"... ".length + @".".length + extension.length)] mutableCopy];
+            [newFileName appendString:@"... "];
+        }
+        [newFileName appendFormat:@".%@", extension];
+
+        [self.renamedFileNames addObject:newFileName];
     }
     
     [self.tableView reloadData];

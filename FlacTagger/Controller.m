@@ -137,7 +137,9 @@ FileRenamingWindowControllerDataSource>
 }
 
 -(void)mainWindowController:(MainWindowController *)controller tagFilesFromDiscogs:(NSArray *)files{
-    
+    if (files.count == 0) {
+        return;
+    }
     self.tagFromDiscogsWindowController = [[TagFromDiscogsWindowController alloc] initWithWindowNibName:NSStringFromClass([TagFromDiscogsWindowController class])];
     self.tagFromDiscogsWindowController.delegate = self;
     self.tagFromDiscogsWindowController.dataSource = self;
@@ -169,16 +171,13 @@ FileRenamingWindowControllerDataSource>
 
 -(void)tagFromDiscogsWindowController:(TagFromDiscogsWindowController *)controller
                     finishedWithPairs:(NSArray *)pairings
-                         catalogEntry:(DiscogsReleaseCatalogEntry *)catalogEntry{
+                         catalogEntry:(DiscogsReleaseCatalogEntry *)catalogEntry
+                          useFullDate:(BOOL)useFullDate {
     BOOL needsAlbumArtist = NO;
-    NSString * albumArtist = [self.releaseData.albumArtists componentsJoinedByString:@", "];
     for (DiscogsTaggingPair * pair in pairings) {
-        if (pair.discogsData.artists.count > 0) {
-            NSString * trackArtist = [pair.discogsData.artists componentsJoinedByString:@", "];
-            if (![trackArtist isEqualToString:albumArtist]) {
-                needsAlbumArtist = YES;
-                break;
-            }
+        if (pair.discogsData.artist != nil && ![pair.discogsData.artist isEqualToString:self.releaseData.albumArtist]) {
+            needsAlbumArtist = YES;
+            break;
         }
     }
     
@@ -186,27 +185,27 @@ FileRenamingWindowControllerDataSource>
         NSMutableDictionary * tags = [pair.file.tags mutableCopy];
         tags[@"TITLE"] = pair.discogsData.title;
         tags[@"ALBUM"] = self.releaseData.album;
-        NSString * artist;
-        if (pair.discogsData.artists.count > 0) {
-            artist = [pair.discogsData.artists componentsJoinedByString:@", "];
-        } else {
-            artist = [self.releaseData.albumArtists componentsJoinedByString:@", "];
-        }
-        tags[@"ARTIST"] = artist;
+        tags[@"ARTIST"] = pair.discogsData.artist ?: self.releaseData.albumArtist;
         if (needsAlbumArtist) {
-            tags[@"ALBUMARTIST"] = [self.releaseData.albumArtists componentsJoinedByString:@", "];
+            tags[@"ALBUMARTIST"] = self.releaseData.albumArtist;
         } else {
             [tags removeObjectForKey:@"ALBUMARTIST"];
         }
-        
+
         if (self.releaseData.releaseDate) {
-            tags[@"DATE"] = self.releaseData.releaseDate;
+            tags[@"DATE"] = useFullDate ? self.releaseData.releaseDate : [self.releaseData.releaseDate substringToIndex:4];
         } else {
             [tags removeObjectForKey:@"DATE"];
         }
+
+        if (self.releaseData.originalDate) {
+            tags[@"ORIGINALDATE"] = useFullDate ? self.releaseData.originalDate : [self.releaseData.originalDate substringToIndex:4];
+        } else {
+            [tags removeObjectForKey:@"ORIGINALDATE"];
+        }
         
         if (self.releaseData.genres) {
-            tags[@"GENRE"] = [self.releaseData.genres componentsJoinedByString:@", "];
+            tags[@"GENRE"] = [self.releaseData.genres componentsJoinedByString:@"; "];
         } else {
             [tags removeObjectForKey:@"GENRE"];
         }

@@ -126,7 +126,7 @@
         return NO;
     }
 
-    [self.delegate mainWindowController:self didDropFileURLs:NSPasteboard.generalPasteboard.fileURLs];
+    [self.delegate mainWindowController:self didDropFileURLs:info.draggingPasteboard.fileURLs];
     
     return YES;
 }

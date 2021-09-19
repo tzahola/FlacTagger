@@ -22,29 +22,31 @@
 
 @property (readonly) NSString* position;
 @property (readonly) NSString * title;
-@property (readonly) NSArray * artists;
+@property (readonly) NSString * artist;
 
 -(instancetype)initWithPosition:(NSString*)position
                           title:(NSString *)title
-                        artists:(NSArray *)artists;
+                         artist:(NSString *)artist;
 
 @end
 
 @interface DiscogsReleaseData : NSObject
 
-@property (readonly) NSArray * albumArtists;
+@property (readonly) NSString * albumArtist;
 @property (readonly) NSArray * genres;
 @property (readonly) NSString * album;
 @property (readonly) NSArray * tracks;
 @property (readonly) NSString * releaseDate;
+@property (readonly) NSString * originalDate;
 @property (readonly) NSArray* catalogEntries;
 
--(instancetype)initWithAlbumArtists:(NSArray *)albumArtists
-                             genres:(NSArray *)genres
-                              album:(NSString *)album
-                             tracks:(NSArray *)tracks
-                        releaseDate:(NSString *)releaseDate
-                     catalogEntries:(NSArray *)catalogEntries;
+-(instancetype)initWithAlbumArtist:(NSString *)albumArtist
+                            genres:(NSArray *)genres
+                             album:(NSString *)album
+                            tracks:(NSArray *)tracks
+                       releaseDate:(NSString *)releaseDate
+                      originalDate:(NSString *)originalDate
+                    catalogEntries:(NSArray *)catalogEntries;
 
 @end
 

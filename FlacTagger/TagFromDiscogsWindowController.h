@@ -39,7 +39,8 @@
 -(void)tagFromDiscogsWindowControllerDidCancel:(TagFromDiscogsWindowController *)controller;
 -(void)tagFromDiscogsWindowController:(TagFromDiscogsWindowController*)controller
                     finishedWithPairs:(NSArray*)pairings
-                         catalogEntry:(DiscogsReleaseCatalogEntry*)catalogEntry;
+                         catalogEntry:(DiscogsReleaseCatalogEntry*)catalogEntry
+                          useFullDate:(BOOL)useFullDate;
 
 @end
 
