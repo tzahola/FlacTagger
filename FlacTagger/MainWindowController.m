@@ -26,7 +26,9 @@
     NSMutableArray<NSURL*>* fileURLs = [NSMutableArray new];
     for (NSPasteboardItem* item in items) {
         NSData* fileURLData = [item dataForType:NSPasteboardTypeFileURL];
-        NSAssert(fileURLData != nil, @"");
+        if (fileURLData == nil) {
+            continue;
+        }
 
         NSURL* fileURL = [NSURL URLWithDataRepresentation:fileURLData relativeToURL:nil];
         NSAssert(fileURL.isFileURL, @"");
@@ -47,7 +49,7 @@
 
 @implementation MainWindowController
 
-- (IBAction)editFiles:(id)sender {
+- (IBAction)edit:(id)sender {
     [self.delegate mainWindowController:self editFiles:[self selectedFiles]];
 }
 
@@ -106,7 +108,8 @@
 }
 
 - (IBAction)paste:(id)sender {
-    [self.delegate mainWindowController:self didDropFileURLs:NSPasteboard.generalPasteboard.fileURLs];
+    NSArray<NSURL*>* fileURLs = NSPasteboard.generalPasteboard.fileURLs;
+    [self.delegate mainWindowController:self didDropFileURLs:fileURLs];
 }
 
 -(NSDragOperation)tableView:(NSTableView *)tableView validateDrop:(id<NSDraggingInfo>)info proposedRow:(NSInteger)row proposedDropOperation:(NSTableViewDropOperation)dropOperation{

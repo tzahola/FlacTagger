@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		678D2F611E351C8400AEC37D /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 678D2F601E351C8400AEC37D /* WebKit.framework */; };
+		7D8D491327AE01400062AFED /* AddNewTagWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7D8D491227AE01400062AFED /* AddNewTagWindow.xib */; };
 		E21AEDEC18BA850100BAD39F /* EditIndividualValuesWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = E21AEDEA18BA850100BAD39F /* EditIndividualValuesWindowController.m */; };
 		E21AEDED18BA850100BAD39F /* EditIndividualValuesWindowController.xib in Resources */ = {isa = PBXBuildFile; fileRef = E21AEDEB18BA850100BAD39F /* EditIndividualValuesWindowController.xib */; };
 		E221862318B010BC00A378CE /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E221862218B010BC00A378CE /* Cocoa.framework */; };
@@ -53,6 +54,7 @@
 
 /* Begin PBXFileReference section */
 		678D2F601E351C8400AEC37D /* WebKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WebKit.framework; path = System/Library/Frameworks/WebKit.framework; sourceTree = SDKROOT; };
+		7D8D491227AE01400062AFED /* AddNewTagWindow.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = AddNewTagWindow.xib; sourceTree = "<group>"; };
 		E21AEDE918BA850100BAD39F /* EditIndividualValuesWindowController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EditIndividualValuesWindowController.h; sourceTree = "<group>"; };
 		E21AEDEA18BA850100BAD39F /* EditIndividualValuesWindowController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EditIndividualValuesWindowController.m; sourceTree = "<group>"; };
 		E21AEDEB18BA850100BAD39F /* EditIndividualValuesWindowController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = EditIndividualValuesWindowController.xib; sourceTree = "<group>"; };
@@ -195,6 +197,7 @@
 				E2B448E018B1166200151E0F /* TagEditorWindowController.h */,
 				E2B448E118B1166200151E0F /* TagEditorWindowController.m */,
 				E2B448E218B1166200151E0F /* TagEditorWindowController.xib */,
+				7D8D491227AE01400062AFED /* AddNewTagWindow.xib */,
 				E21AEDE918BA850100BAD39F /* EditIndividualValuesWindowController.h */,
 				E21AEDEA18BA850100BAD39F /* EditIndividualValuesWindowController.m */,
 				E21AEDEB18BA850100BAD39F /* EditIndividualValuesWindowController.xib */,
@@ -345,6 +348,7 @@
 				E2D6C8BB18CBD6340005A7DF /* MainMenu.xib in Resources */,
 				E2B448E918B1420E00151E0F /* TagFromDiscogsWindowController.xib in Resources */,
 				E2D6C8B218CB24DB0005A7DF /* TrackNumberingWindowController.xib in Resources */,
+				7D8D491327AE01400062AFED /* AddNewTagWindow.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -482,9 +486,10 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
-					/usr/local/include,
+					/opt/homebrew/include,
 				);
-				LIBRARY_SEARCH_PATHS = /usr/local/lib;
+				LIBRARY_SEARCH_PATHS = /opt/homebrew/lib;
+				MACOSX_DEPLOYMENT_TARGET = 10.15;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = macosx;
 			};
@@ -530,9 +535,10 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
-					/usr/local/include,
+					/opt/homebrew/include,
 				);
-				LIBRARY_SEARCH_PATHS = /usr/local/lib;
+				LIBRARY_SEARCH_PATHS = /opt/homebrew/lib;
+				MACOSX_DEPLOYMENT_TARGET = 10.15;
 				SDKROOT = macosx;
 			};
 			name = Release;

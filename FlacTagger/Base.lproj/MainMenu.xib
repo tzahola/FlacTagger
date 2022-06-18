@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="11762" systemVersion="16C67" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="19455" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
     <dependencies>
         <deployment identifier="macosx"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="11762"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="19455"/>
     </dependencies>
     <objects>
         <customObject id="-2" userLabel="File's Owner" customClass="NSApplication">
@@ -63,27 +63,43 @@
                         </items>
                     </menu>
                 </menuItem>
-                <menuItem title="Tracks" id="48a-y0-zPa">
-                    <menu key="submenu" title="Tracks" id="Lhh-w3-FEI">
+                <menuItem title="Tracks" id="Sec-fv-heD">
+                    <menu key="submenu" title="Tracks" id="8fw-dH-lbT">
                         <items>
-                            <menuItem title="Edit" keyEquivalent="e" id="C9n-vw-Rpc">
+                            <menuItem title="Edit Tags" keyEquivalent="e" id="lrm-VQ-jOy">
                                 <connections>
-                                    <action selector="editFiles:" target="-1" id="dtg-4o-h1b"/>
+                                    <action selector="edit:" target="-1" id="Sb2-6A-zlr"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Number tracks" keyEquivalent="n" id="bDe-L0-dZF">
+                            <menuItem title="Number Tracks" keyEquivalent="N" id="1zP-Oc-m3f">
                                 <connections>
-                                    <action selector="numberTracks:" target="-1" id="UbN-2f-hhH"/>
+                                    <action selector="numberTracks:" target="-1" id="CZX-eT-rQm"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Tag from Discogs.com" keyEquivalent="t" id="uNB-3I-V6A">
+                            <menuItem title="Tag from Discogs.com" keyEquivalent="t" id="Uih-QZ-71w">
                                 <connections>
-                                    <action selector="tagFromDiscogs:" target="-1" id="RbF-na-OE4"/>
+                                    <action selector="tagFromDiscogs:" target="-1" id="doR-Sw-lpE"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Rename files" keyEquivalent="r" id="pxf-rj-Nf2">
+                            <menuItem title="Rename Files" keyEquivalent="r" id="qDA-P4-d6g">
                                 <connections>
-                                    <action selector="renameFiles:" target="-1" id="AGy-6x-TxS"/>
+                                    <action selector="renameFiles:" target="-1" id="Lh7-8c-3qY"/>
+                                </connections>
+                            </menuItem>
+                        </items>
+                    </menu>
+                </menuItem>
+                <menuItem title="Tags" id="48a-y0-zPa">
+                    <menu key="submenu" title="Tags" id="Lhh-w3-FEI">
+                        <items>
+                            <menuItem title="Edit Individual Values" keyEquivalent="e" id="C9n-vw-Rpc">
+                                <connections>
+                                    <action selector="edit:" target="-1" id="fQl-lU-Vbd"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="Add New Tag" keyEquivalent="n" id="pKs-uL-Dpy">
+                                <connections>
+                                    <action selector="addNewTag:" target="-1" id="hLK-R1-vfi"/>
                                 </connections>
                             </menuItem>
                         </items>
@@ -169,6 +185,7 @@ CA
                     </menu>
                 </menuItem>
             </items>
+            <point key="canvasLocation" x="134" y="136"/>
         </menu>
         <customObject id="494" customClass="AppDelegate"/>
         <customObject id="420" customClass="NSFontManager"/>
