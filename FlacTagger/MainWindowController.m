@@ -71,24 +71,31 @@
     
     NSTableColumn * titleColumn = [[NSTableColumn alloc] initWithIdentifier:@"TITLE"];
     titleColumn.headerCell = [[NSTableHeaderCell alloc] initTextCell:@"Title"];
+    titleColumn.editable = NO;
     
     NSTableColumn * artistColumn = [[NSTableColumn alloc] initWithIdentifier:@"ARTIST"];
     artistColumn.headerCell = [[NSTableHeaderCell alloc] initTextCell:@"Artist"];
+    artistColumn.editable = NO;
     
     NSTableColumn * albumColumn = [[NSTableColumn alloc] initWithIdentifier:@"ALBUM"];
     albumColumn.headerCell = [[NSTableHeaderCell alloc] initTextCell:@"Album"];
+    albumColumn.editable = NO;
     
     NSTableColumn * tracknumberColumn = [[NSTableColumn alloc] initWithIdentifier:@"TRACKNUMBER"];
     tracknumberColumn.headerCell = [[NSTableHeaderCell alloc] initTextCell:@"Track no."];
+    tracknumberColumn.editable = NO;
     
     NSTableColumn * genreColumn = [[NSTableColumn alloc] initWithIdentifier:@"GENRE"];
     genreColumn.headerCell = [[NSTableHeaderCell alloc] initTextCell:@"Genre"];
+    genreColumn.editable = NO;
     
     [self.tableView addTableColumn:tracknumberColumn];
     [self.tableView addTableColumn:artistColumn];
     [self.tableView addTableColumn:titleColumn];
     [self.tableView addTableColumn:albumColumn];
     [self.tableView addTableColumn:genreColumn];
+    
+    [self.tableView sizeLastColumnToFit];
 
     [self.window makeFirstResponder:self.tableView];
 }
