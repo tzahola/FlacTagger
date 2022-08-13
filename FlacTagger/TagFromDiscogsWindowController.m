@@ -114,8 +114,8 @@ static NSString* const kIphoneUserAgent = @"Mozilla/5.0 (iPhone; CPU iPhone OS 6
     self.missingDataBackgroundColor = [NSColor colorWithRed:1 green:0.7 blue:0.7 alpha:1];
     
     self.emptyView = [[NSView alloc] initWithFrame:NSZeroRect];
-    [self.filesTableViewScrollView setSynchronizedScrollView:self.discogsDataTableViewScrollView];
-    [self.discogsDataTableViewScrollView setSynchronizedScrollView:self.filesTableViewScrollView];
+    self.filesTableViewScrollView.synchronizedScrollView = self.discogsDataTableViewScrollView;
+    self.discogsDataTableViewScrollView.synchronizedScrollView = self.filesTableViewScrollView;
     
     [self.filesTableView registerForDraggedTypes:@[ (NSString *)kUTTypeData ]];
     [self.discogsDataTableView registerForDraggedTypes:@[ (NSString *)kUTTypeData ]];
